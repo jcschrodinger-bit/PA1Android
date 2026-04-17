@@ -1,0 +1,31 @@
+<resources>
+    <string name="app_name">Zapatería Elegance</string>
+    <string name="slogan">Pisa fuerte, camina con estilo</string>
+    <string name="bienvenida">Bienvenida a la nueva colección</string>
+    <string name="derechos">2026 Todos los derechos reservados</string>
+
+    <string name="title_activity_main">Inicio</string>
+    <string name="title_activity_productos">Nuestros Zapatos</string>
+    <string name="title_activity_compras">Mi Carrito</string>
+    <string name="title_activity_terminos">Términos y Condiciones</string>
+    <string name="title_activity_contacto">Contáctanos</string>
+
+    <string name="btn_ver_productos">Ver Catálogo</string>
+    <string name="btn_ir_carrito">Ir al Carrito</string>
+    <string name="btn_terminos">Términos Legales</string>
+    <string name="btn_contacto">Contacto</string>
+    <string name="cerrar">Cerrar</string>
+    <string name="btn_pagar">Proceder al Pago</string>
+
+    <string name="desc_portada">Imagen de portada de la zapatería</string>
+    <string name="desc_zapato">Modelo de zapato exclusivo</string>
+    <string name="desc_carrito">Icono del carrito de compras</string>
+    <string name="desc_compra_img">Imagen de empaque de compra</string>
+    <string name="desc_mapa">Ubicación de la tienda en el mapa</string>
+
+    <string name="texto_terminos">El presente documento establece los términos bajo los cuales la zapatería regula el acceso y uso de su plataforma de ventas en línea. Al usar esta aplicación, el usuario acepta de manera íntegra todas las disposiciones.\n\nEn cuanto a las transacciones comerciales, los precios de los zapatos, botas y zapatillas están sujetos a cambios. Los métodos de pago aceptados son gestionados por proveedores externos seguros.\n\nPara cualquier controversia legal, las partes se someten a la jurisdicción y competencia de los tribunales de Lima, Perú.</string>
+
+    <string name="contacto_direccion">Av. Principal 123, Lima</string>
+    <string name="contacto_telefono">+51 987 654 321</string>
+    <string name="contacto_email">ventas@zapateriaelegance.pe</string>
+</resources>
