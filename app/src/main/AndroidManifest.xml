@@ -23,10 +23,10 @@
             </intent-filter>
         </activity>
         <activity android:name=".ProductosActivity" />
-        <activity android:name=".ContactoActivity" />
         <activity android:name=".TerminosActivity" />
         <activity android:name=".ComprasActivity" />
         <activity android:name=".ProductoDetalleActivity" />
+        <activity android:name=".PerfilActivity" />
     </application>
 
 </manifest>

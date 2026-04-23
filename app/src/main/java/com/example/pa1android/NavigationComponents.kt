@@ -36,8 +36,7 @@ fun FloatingNavBar(currentScreen: String, onNavigate: (String) -> Unit) {
                 Triple("Home", Icons.Outlined.Home, "Home"),
                 Triple("Productos", Icons.Outlined.ShoppingBag, "Productos"),
                 Triple("Compras", Icons.Outlined.ShoppingCart, "Compras"),
-                Triple("Profile", Icons.Outlined.Person, "Profile"),
-                Triple("Premium", Icons.Outlined.Star, "Premium")
+                Triple("Profile", Icons.Outlined.Person, "Profile")
             )
 
             items.forEach { (label, icon, target) ->

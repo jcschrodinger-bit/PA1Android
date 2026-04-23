@@ -52,7 +52,7 @@ class MainActivity : ComponentActivity() {
                                 when(target) {
                                     "Productos" -> startActivity(Intent(this@MainActivity, ProductosActivity::class.java))
                                     "Compras" -> startActivity(Intent(this@MainActivity, ComprasActivity::class.java))
-                                    "Contacto" -> startActivity(Intent(this@MainActivity, ContactoActivity::class.java))
+                                    "Profile" -> startActivity(Intent(this@MainActivity, PerfilActivity::class.java))
                                 }
                             })
                         }

@@ -195,6 +195,7 @@ fun ProductoDetalleContent(
             onClick = { 
                 val resultIntent = Intent().apply {
                     putExtra("NOMBRE", nombre)
+                    putExtra("PRECIO", precio)
                     putExtra("IS_FAVORITE", true)
                 }
                 context?.setResult(Activity.RESULT_OK, resultIntent)
