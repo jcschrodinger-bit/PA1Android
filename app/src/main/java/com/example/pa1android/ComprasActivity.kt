@@ -40,13 +40,11 @@ class ComprasActivity : ComponentActivity() {
 }
 
 @Composable
-fun CartScreen(onClose: () -> Unit) {
-    // Obtenemos los productos reales seleccionados desde CartManager
+fun CartScreen(onClose: () -> Unit) {// obtenemos los productos reales seleccionados desde CartManager
     val productosComprados = CartManager.getProductsList()
     val total = CartManager.getTotal()
 
-    // Gradiente Azul Oceánico profundo (Doble de oscuro) con efecto de "ola"
-    val seaGradient = Brush.linearGradient(
+    val seaGradient = Brush.linearGradient(// azul oceánico profundo con efecto de ola
         0.0f to Color(0xFF01121B),
         0.5f to Color(0xFF042940), // La "ola" ahora es el color que antes era base
         1.0f to Color(0xFF01121B),
@@ -57,10 +55,10 @@ fun CartScreen(onClose: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(seaGradient) // Aplicamos el gradiente marino a la base
+            .background(seaGradient) // aplicamos el gradiente marino a la base
     ) {
-        // Parte Superior (Oscura)
-        Box(
+
+        Box( // parte superior (oscura)
             modifier = Modifier
                 .weight(1f)
                 .fillMaxWidth()
@@ -71,7 +69,7 @@ fun CartScreen(onClose: () -> Unit) {
                     .fillMaxSize()
                     .padding(horizontal = 24.dp)
             ) {
-                // Fila de encabezado con botón cerrar
+                // fila de encabezado con botón cerrar
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,

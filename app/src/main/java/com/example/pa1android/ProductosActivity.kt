@@ -44,9 +44,9 @@ class ProductosActivity : ComponentActivity() {
         setContent {
             PA1AndroidTheme {
                 var selectedFilter by remember { mutableStateOf("Botas") }
-                // El estado ahora se sincroniza con CartManager
+                // el estado ahora se sincroniza con CartManager
                 
-                // Configurar launcher para recibir resultado de Detalle
+                // configurar launcher para recibir resultado de los detalle
                 val detailLauncher = androidx.activity.compose.rememberLauncherForActivityResult(
                     contract = androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult()
                 ) { result ->
@@ -59,7 +59,7 @@ class ProductosActivity : ComponentActivity() {
                     }
                 }
 
-                // Definición de las 10 botas completas con sus descripciones
+                // Botas
                 val listaBotas = listOf(
                     Producto("Sienne Étoile", 240, R.drawable.sienne_etoile, "Esta bota over-the-knee es la pieza definitiva para la mujer que desea una silueta infinita y una presencia magnética. Su diseño artesanal de textura aterciopelada captura la luz, logrando el equilibrio ideal entre la calidez estacional y el glamour de las pasarelas internacionales."),
                     Producto("Bordeaux Cavalière", 260, R.drawable.bordeaux_cavaliere, "Inspirada en la estética ecuestre de la alta sociedad, esta bota de grano entero redefine la elegancia funcional con un brillo sofisticado y duradero. Su diseño clásico transita sin esfuerzo hacia eventos de alto nivel, siendo ideal para quien busca nobleza en los materiales y una autoridad femenina impecable."),
@@ -73,7 +73,7 @@ class ProductosActivity : ComponentActivity() {
                     Producto("Botte Étoile de Minuit", 330, R.drawable.botte_etoile_de_minuit, "Una silueta estilizada que captura la esencia de la distinción nocturna mediante un acabado aterciopelado y bordados de alta costura. Diseñada para ofrecer un glamour absoluto, su perfil sofisticado es la elección predilecta para la mujer cosmopolita que no acepta menos que la perfección.")
                 )
 
-                // Definición de las 10 zapatillas completas con sus descripciones
+                // Zapatillas
                 val listaZapatillas = listOf(
                     Producto("Terra Suede Runner", 180, R.drawable.terra_suede_runner, "Una zapatilla que redefine el lujo urbano, combinando gamuza de primera calidad con una suela ergonómica diseñada para el movimiento constante. Su tonalidad tierra evoca una conexión con lo natural sin perder la sofisticación cosmopolita."),
                     Producto("Aethel Minimalist", 195, R.drawable.aethel_minimalist, "La pureza del diseño escandinavo aplicada al calzado deportivo de élite. Con líneas limpias y una construcción monocromática, esta zapatilla es el complemento perfecto para un look 'athleisure' que respira exclusividad y modernidad."),
@@ -87,7 +87,7 @@ class ProductosActivity : ComponentActivity() {
                     Producto("Aero Luxe Runner", 260, R.drawable.aero_luxe_runner, "La cúspide de la ingeniería y el estilo. Esta zapatilla ultraligera cuenta con una cámara de aire oculta para un confort inigualable y acabados en seda técnica, diseñada para quienes exigen rendimiento deportivo con una estética de alta costura.")
                 )
 
-                // Definición de los 10 tacos completas con sus descripciones
+                // Tacos
                 val listaTacos = listOf(
                     Producto("Oasis Brodé", 350, R.drawable.oasis_brode, "Un taco de ensueño que combina la delicadeza del bordado artesanal con una silueta estructuralmente perfecta. Su diseño evoca la frescura de un jardín secreto, ideal para ceremonias donde la elegancia y la feminidad deben brillar con luz propia."),
                     Producto("Lumière Gravée", 380, R.drawable.lumiere_gravee, "La personificación del lujo nocturno. Este zapato destaca por sus detalles grabados que capturan y reflejan la luz en cada paso, creando un efecto hipnótico. Es la elección definitiva para galas y eventos de alfombra roja."),
@@ -101,7 +101,7 @@ class ProductosActivity : ComponentActivity() {
                     Producto("Python de Cristal Luxe", 480, R.drawable.python_de_cristal, "La máxima expresión del lujo exótico. Este taco combina la textura salvaje del pitón con incrustaciones de micro-cristales que añaden un brillo multidimensional, diseñado para la mujer que no acepta nada menos que la perfección absoluta.")
                 )
 
-                // Definición de las 10 sandalias completas con sus descripciones
+                // Sandalias
                 val listaSandalias = listOf(
                     Producto("Sky Blue Geo Flat", 120, R.drawable.sky_blue_geo_flat, "La esencia de la libertad estival capturada en una sandalia plana de diseño geométrico. Su tono azul cielo evoca la serenidad de los días mediterráneos, mientras que su estructura minimalista ofrece un confort inigualable para caminatas elegantes junto al mar."),
                     Producto("Émeraude Cage Mule", 150, R.drawable.emeraude_cage_mule, "Una mule de diseño arquitectónico que envuelve el pie en una estructura de 'jaula' sofisticada. En un verde esmeralda profundo, esta pieza es el equilibrio perfecto entre la ventilación estival y la alta costura urbana."),
