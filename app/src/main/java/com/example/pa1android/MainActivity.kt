@@ -9,17 +9,13 @@ import androidx.compose.animation.core.*
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalUriHandler
@@ -28,41 +24,34 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import com.example.pa1android.ui.components.FloatingNavBar
 import com.example.pa1android.ui.theme.PA1AndroidTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge() // optimiza el dibujo de la interfaz para que use todo el espacio de la pantalla
-        setContent { // punto de entrada de compose: define la jerarquía de UI sin usar archivos XML
+        CartManager.init(applicationContext) // Inicializa la persistencia que clonamos
+        enableEdgeToEdge()
+        setContent {
             PA1AndroidTheme {
-                // remember y mutableStateOf gestionan el estado de navegación interna
-                var showWelcomeContent by remember { mutableStateOf(false) }
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(MaterialTheme.colorScheme.background)
+                ) {
+                    MainWelcomePage() // Se despliega inmediatamente con su banner e información
 
-                if (!showWelcomeContent) {// condicional que carga la pantalla de bienvenida basándose en el estado booleano
-                    WelcomeAnimationScreen(onScreenClick = {
-                        showWelcomeContent = true // dispara el cambio de estado para mostrar el contenido principal
-                    })
-                } else {
-                    Box( // el Box actúa como contenedor raíz para superponer elementos del fondo y la barra de navegación
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .background(MaterialTheme.colorScheme.background)
-                    ) {
-                        MainWelcomePage() // carga el módulo de contenido informativo y branding
-
-                        // centra a la barra de navegación en la parte inferior central
-                        Box(modifier = Modifier.align(Alignment.BottomCenter)) {
-                            FloatingNavBar(currentScreen = "Home", onNavigate = { target ->
-                                // gestión de navegación explícita mediante Intents según el destino seleccionado
-                                when (target) {
-                                    "Productos" -> startActivity(Intent(this@MainActivity, ProductosActivity::class.java))
-                                    "Compras" -> startActivity(Intent(this@MainActivity, ComprasActivity::class.java))
-                                    "Profile" -> startActivity(Intent(this@MainActivity, PerfilActivity::class.java))
+                    Box(modifier = Modifier.align(Alignment.BottomCenter)) {
+                        FloatingNavBar(currentScreen = "Home", onNavigate = { target ->
+                            when (target) {
+                                "Productos" -> {
+                                    startActivity(Intent(this@MainActivity, ProductosActivity::class.java))
+                                    overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right) // Transición 2
                                 }
-                            })
-                        }
+                                "Compras" -> startActivity(Intent(this@MainActivity, ComprasActivity::class.java))
+                                "Profile" -> startActivity(Intent(this@MainActivity, PerfilActivity::class.java))
+                            }
+                        })
                     }
                 }
             }

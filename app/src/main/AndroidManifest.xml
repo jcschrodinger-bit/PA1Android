@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <!-- REQUERIMIENTO: Permiso explícito para conectar con AlwaysData -->
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -11,22 +14,30 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.PA1Android">
+
+        <!-- NUEVA: La SplashScreenActivity ahora es la puerta de entrada oficial -->
         <activity
-            android:name=".MainActivity"
+            android:name=".SplashScreenActivity"
             android:exported="true"
-            android:label="@string/app_name"
-            android:theme="@style/Theme.PA1Android">
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"> <!-- Forzar pantalla completa elegante -->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ProductosActivity" />
-        <activity android:name=".TerminosActivity" />
-        <activity android:name=".ComprasActivity" />
-        <activity android:name=".ProductoDetalleActivity" />
-        <activity android:name=".PerfilActivity" />
+
+        <!-- MainActivity pasa a ser una actividad interna (Cambiamos exported a false y quitamos el intent-filter) -->
+        <activity
+            android:name=".MainActivity"
+            android:exported="false" />
+
+        <activity android:name=".ProductosActivity" android:exported="false" />
+        <activity android:name=".auth.TerminosActivity" android:exported="false" />
+        <activity android:name=".ComprasActivity" android:exported="false" />
+        <activity android:name=".ProductoDetalleActivity" android:exported="false" />
+        <activity android:name=".PerfilActivity" android:exported="false" />
+        <activity android:name=".CheckoutSuccessActivity" android:exported="false" />
+
     </application>
 
 </manifest>
