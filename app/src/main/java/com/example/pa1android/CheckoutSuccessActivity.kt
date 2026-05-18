@@ -69,7 +69,7 @@ fun CheckoutSuccessScreen(onBackToStore: () -> Unit) {
         )
     }
 
-    Column(
+    Column( // Contenedor vertical centrado
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background) // Fondo LightGray de la rúbrica
@@ -80,7 +80,7 @@ fun CheckoutSuccessScreen(onBackToStore: () -> Unit) {
         Spacer(modifier = Modifier.weight(1f))
 
         // Contenedor circular verde translúcido
-        Box(
+        Box( // Círculo para el icono de éxito
             modifier = Modifier
                 .size(120.dp)
                 .scale(scaleAnim.value) // Inyección de la física de hardware

@@ -39,9 +39,9 @@ object CartManager { // Instancia única (Singleton), equivalente a static let s
      * Agrega o elimina un producto de forma directa mediante un toque (utilizado en el listado maestro).
      */
     fun toggleProduct(nombre: String, precio: Int) {
-        if (isSelected(nombre)) {
+        if (isSelected(nombre)) { // Si ya está, lo quitamos
             selectedProducts.remove(nombre)
-        } else {
+        } else { // Si no está, lo agregamos
             selectedProducts[nombre] = precio
         }
         saveCart()

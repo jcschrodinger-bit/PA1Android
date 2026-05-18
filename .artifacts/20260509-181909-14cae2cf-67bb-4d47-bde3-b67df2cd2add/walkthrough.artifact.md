@@ -1,38 +1,26 @@
-# Walkthrough - Fix Migration Errors from Xcode to Android Studio
+# Walkthrough - Final Rubric Compliance & Refactoring
 
-I have analyzed and fixed the errors introduced during the migration of screens from the Xcode project to Android Studio. The project now compiles successfully and the UI closely replicates the intended design.
+I have completed all the requirements specified in the rubric, ensuring the project is fully compliant and professionally organized.
 
-## Changes Made
+## 1. Requirement 2.1: Identity & UI Optimizations
+- **Custom Icon (2.1.1)**: Configured `icono_elegance.png` as the official app icon in `AndroidManifest.xml`.
+- **Splash Screen (2.1.2)**: Verified `SplashScreenActivity` with branding and entry logic.
+- **Animations (2.1.3)**: implemented 3 simultaneous animations in the Splash Screen (Scale, Alpha, and Width).
+- **Transitions (2.1.4)**: Configured 2 fluid transitions between Activities (Fade for Splash->Main, Slide for Main->Categories).
+- **Reusable Component (2.1.5)**: The `FloatingNavBar` is implemented and rendered in 4 screens (`MainActivity`, `CategoriasActivity`, `ProductosActivity`, `PerfilActivity`).
 
-### 1. Dependencies and Configuration
-- Added missing dependencies to `libs.versions.toml` and `app/build.gradle.kts`:
-    - **Gson**: For JSON parsing in `CartManager`.
-    - **Retrofit & Gson Converter**: For network calls to AlwaysData API.
-    - **Coil Compose**: For asynchronous image loading.
-    - **Navigation Compose**: For future navigation needs.
-- Synchronized Gradle to apply changes.
+## 2. Requirement 2.2: Additional Screens (Frontend)
+- **Pantalla 1 (Listado General)**: `ProductosActivity` displays all products from AlwaysData with high-quality images and more than 8 rows.
+- **Pantalla 2 (Tabla Maestra)**: Created **[CategoriasActivity.kt](file:///C:/Users/j/Desktop/Z.Projects/AndroidStudio/PA1Android/app/src/main/java/com/example/pa1android/CategoriasActivity.kt)** as the Master screen, showing 4 major categories with high-quality local images.
+- **Pantalla 3 (Tabla Detalle)**: `ProductosActivity` now acts as the dynamic Detail screen. When a category is selected in the Master screen, this screen loads and filters the corresponding products dynamically (at least 4 linked rows per category).
 
-### 2. Code Cleanup and Standardisation
-- **Redeclared Classes**: Removed duplicated `Producto` and `Terminos` class definitions.
-- **Redundant Components**: Deleted `PerfilComponents.kt` as it was identical to `UIComponents.kt`.
-- **Model Consolidation**: Unified the `Producto` model in `Producto.kt` to support both API responses (snake_case) and UI usage (camelCase).
-- **Package and Import Fixes**: Corrected numerous incorrect package declarations and missing imports (e.g., `getValue`, `setValue`, `Box`, `Button`, `APIConfig`).
+## 3. Requirement 2.3: Backend & Persistance
+- **AlwaysData**: All network calls in `RetrofitClient` point to `jcmesia.alwaysdata.net`, fetching live data for Products and Terms.
 
-### 3. Error Correction in Key Files
-- **CartManager.kt**: Added missing Gson imports and fixed initialization issues.
-- **ProductosActivity.kt**: Fixed `items` import for `LazyVerticalGrid` and updated property usages to match the new `Producto` model.
-- **PerfilActivity.kt**: Fixed `Modifier.padding` overloads and missing component imports.
-- **ComprasActivity.kt**: Fixed syntax errors in imports and UI layout properties (`trailing` to `end`).
-- **AlwaysDataApiService.kt**: Corrected Retrofit interface definition and client initialization.
+## Code Organization & Education
+- **Modularization**: UI components are separated into `ui.components` package.
+- **Informal Comments**: Added plain-language comments to all files to help non-programmers understand the structural logic.
 
 ## Verification Results
-
-### Automated Tests
-- Successfully ran `gradlew :app:assembleDebug` without errors.
-
-### Manual Verification
-- Rendered Compose Previews for:
-    - `MainWelcomePage`: Verified the landing screen layout and assets.
-    - `PerfilScreen`: Verified the login UI and navigation bar.
-    - `ProductCard`: Verified the catalog item design.
-- All rendered previews show a UI that matches the "Elegance" brand design from the original project.
+- **Build**: Successfully executed `gradlew :app:assembleDebug`.
+- **Flow**: Verified navigation flow: `Splash` -> `Main` -> `Categorias` (Master) -> `Productos` (Detail) -> `ProductoDetalle`.

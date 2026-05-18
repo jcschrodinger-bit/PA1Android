@@ -52,7 +52,7 @@ class ProductoDetalleActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        // Recuperación de los parámetros de producción enviados desde el catálogo
+        // Parámetros de producción enviados desde el catálogo
         val nombre = intent.getStringExtra("NOMBRE") ?: "Producto"
         val precio = intent.getIntExtra("PRECIO", 0)
         val imagenUrl = intent.getStringExtra("IMAGEN_URL") ?: ""
@@ -61,7 +61,7 @@ class ProductoDetalleActivity : ComponentActivity() {
 
         setContent {
             PA1AndroidTheme {
-                Scaffold(
+                Scaffold( // Estructura básica de la pantalla
                     modifier = Modifier.fillMaxSize(),
                     containerColor = MaterialTheme.colorScheme.background // Fondo LightGray de la rúbrica
                 ) { innerPadding ->
@@ -74,11 +74,11 @@ class ProductoDetalleActivity : ComponentActivity() {
                         onClose = { finish() },
                         modifier = Modifier.padding(innerPadding)
                     )
-                }
-            }
-        }
-    }
-}
+                } // Scaffold
+            } // PA1AndroidTheme
+        } // setContent
+    } //onCreate
+} // ComponentActivity
 
 @Composable
 fun ProductoDetalleScreen(
@@ -90,7 +90,7 @@ fun ProductoDetalleScreen(
     onClose: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    // Estados internos reactivos idénticos a las variables @State de tu iOS
+    // Estados internos reactivos idénticos a las variables
     var tallaSeleccionada by remember { mutableStateOf("38") }
     var colorSeleccionado by remember { mutableStateOf("Negro") }
 
@@ -104,16 +104,14 @@ fun ProductoDetalleScreen(
         }
     }
 
-    // ScrollView vertical nativo equivalente al ScrollView de Xcode
-    Column(
+    Column( // Contenedor vertical con scroll
         modifier = modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
     ) {
-        // ==========================================
-        // BOTÓN DE CIERRE (La "X" en la parte superior derecha)
-        // ==========================================
-        Row(
+
+        // Botón para el cierre
+        Row( // Contenedor horizontal para la X
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 24.dp, vertical = 16.dp),
@@ -132,11 +130,8 @@ fun ProductoDetalleScreen(
                 )
             }
         }
-
-        // ==========================================
-        // IMAGEN DEL PRODUCTO (Carga remota asíncrona mediante Coil)
-        // ==========================================
-        Box(
+        // Imagen del producto
+        Box( // Contenedor para la imagen
             modifier = Modifier
                 .fillMaxWidth()
                 .height(350.dp)
@@ -145,7 +140,7 @@ fun ProductoDetalleScreen(
                 .background(Color.Black.copy(alpha = 0.05f)),
             contentAlignment = Alignment.Center
         ) {
-            AsyncImage(
+            AsyncImage( // Imagen cargada de internet
                 model = imagenUrl,
                 contentDescription = nombre,
                 modifier = Modifier.fillMaxSize(),
@@ -155,10 +150,8 @@ fun ProductoDetalleScreen(
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        // ==========================================
-        // NOMBRE Y PRECIO FORMATEADO
-        // ==========================================
-        Row(
+        // Nombre y precio formateado
+        Row( // Contenedor horizontal para nombre y precio
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 24.dp),
@@ -183,7 +176,7 @@ fun ProductoDetalleScreen(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // DESCRIPCIÓN DEL CALZADO
+        // Descripción de los calzados
         Text(
             text = descripcion,
             fontSize = 16.sp,
@@ -196,9 +189,7 @@ fun ProductoDetalleScreen(
 
         Spacer(modifier = Modifier.height(32.dp))
 
-        // ==========================================
-        // SECCIÓN: SELECCIONA TU TALLA
-        // ==========================================
+        // Selección de la talla
         Text(
             text = "Selecciona tu Talla",
             fontSize = 18.sp,
@@ -209,16 +200,16 @@ fun ProductoDetalleScreen(
         Spacer(modifier = Modifier.height(15.dp))
 
         // Carrusel horizontal de tallas
-        Row(
+        Row( // Contenedor horizontal para las tallas
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 24.dp),
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             val tallas = listOf("36", "37", "38", "39", "40")
-            tallas.forEach { talla ->
+            tallas.forEach { talla -> // Repetir para cada talla
                 val esTallaActiva = tallaSeleccionada == talla
-                Box(
+                Box( // Botón circular para cada talla
                     modifier = Modifier
                         .size(50.dp)
                         .clip(CircleShape)
@@ -239,9 +230,7 @@ fun ProductoDetalleScreen(
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        // ==========================================
-        // SECCIÓN: COLOR (Lógica Especial Requerida por Rúbrica)
-        // ==========================================
+        // Seleccionar el color
         Text(
             text = "Color",
             fontSize = 18.sp,
@@ -251,14 +240,15 @@ fun ProductoDetalleScreen(
 
         Spacer(modifier = Modifier.height(15.dp))
 
-        Box(modifier = Modifier.padding(horizontal = 24.dp)) {
+        Box(modifier = Modifier.padding(horizontal = 24.dp)) { // Contenedor para el área de colores
             if (idCategoria == 4) {
-                // MODO SANDALIAS: Renderizado dinámico del color real extraído del texto
-                Row(
+
+                // Modo para las sandalias
+                Row( // Contenedor horizontal para sandalias
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-                    Box(
+                    Box( // Círculo de color
                         modifier = Modifier
                             .size(30.dp)
                             .clip(CircleShape)
@@ -274,15 +264,15 @@ fun ProductoDetalleScreen(
                 }
             } else {
                 // MODO CLÁSICO: Selectores interactivos circulares con aro de contorno
-                Row(horizontalArrangement = Arrangement.spacedBy(15.dp)) {
+                Row(horizontalArrangement = Arrangement.spacedBy(15.dp)) { // Contenedor horizontal para colores clásicos
                     val coloresClasicos = listOf(
                         "Negro" to Color.Black,
                         "Marrón" to Color(0xFF8B4513),
                         "Gris" to Color.Gray
                     )
-                    coloresClasicos.forEach { (nombreColor, colorObjeto) ->
+                    coloresClasicos.forEach { (nombreColor, colorObjeto) -> // Repetir para cada color
                         val esColorActivo = colorSeleccionado == nombreColor
-                        Box(
+                        Box( // Botón circular de color
                             modifier = Modifier
                                 .size(35.dp)
                                 .clip(CircleShape)
@@ -301,12 +291,10 @@ fun ProductoDetalleScreen(
 
         Spacer(modifier = Modifier.height(40.dp))
 
-        // ==========================================
-        // BOTÓN INTERACTIVO DE COMPRA / ELIMINACIÓN
-        // ==========================================
-        Button(
+        // Botón interactivo para compras y eliminar
+        Button( // Botón para comprar o quitar
             onClick = {
-                // Agrega o remueve el producto usando tu lógica persistente de llaves compuestas
+                // Agrega o remueve el producto usando lógica persistente de llaves compuestas
                 CartManager.toggleProduct(nombre, precio)
                 onClose() // Regresa al catálogo de forma fluida
             },

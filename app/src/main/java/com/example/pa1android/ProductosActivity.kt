@@ -18,9 +18,6 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -32,10 +29,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.compose.AsyncImage
 import com.example.pa1android.Network.APIConfig
 import com.example.pa1android.Network.RetrofitClient
+import com.example.pa1android.ui.components.FilterRow
 import com.example.pa1android.ui.components.FloatingNavBar
+import com.example.pa1android.ui.components.ProductCard
 import com.example.pa1android.ui.theme.PA1AndroidTheme
 import kotlinx.coroutines.launch
 
@@ -43,9 +41,21 @@ class ProductosActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        val idCategoriaInicial = intent.getStringExtra("ID_CATEGORIA") ?: "1"
+        
         setContent {
             PA1AndroidTheme {
-                var selectedFilter by remember { mutableStateOf("Botas") }
+                var selectedFilter by remember { 
+                    mutableStateOf(
+                        when(idCategoriaInicial) {
+                            "1" -> "Botas"
+                            "2" -> "Zapatillas"
+                            "3" -> "Tacos"
+                            "4" -> "Sandalias"
+                            else -> "Botas"
+                        }
+                    )
+                }
                 var listaCompletaProductos by remember { mutableStateOf<List<Producto>>(emptyList()) }
                 var cargando by remember { mutableStateOf(true) }
                 val coroutineScope = rememberCoroutineScope()
@@ -55,12 +65,11 @@ class ProductosActivity : ComponentActivity() {
                     contract = androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult()
                 ) { _ -> }
 
-                // Consumo asíncrono desde el hosting AlwaysData (Equivalente al .task de tu iOS)
+                // Consumo asíncrono desde el hosting AlwaysData
                 LaunchedEffect(Unit) {
                     coroutineScope.launch {
                         try {
                             cargando = true
-                            // Llamada nativa a productos.php mediante la interfaz Retrofit
                             val resultado = RetrofitClient.apiService.obtenerProductos()
                             listaCompletaProductos = resultado
                         } catch (e: Exception) {
@@ -71,7 +80,7 @@ class ProductosActivity : ComponentActivity() {
                     }
                 }
 
-                // Mapeo lógico de categorías dinámicas requerido por rúbrica: 1=Botas, 2=Zapatillas, 3=Tacos, 4=Sandalias
+                // Categorías requerido por rúbrica
                 val idCategoriaFiltro = when (selectedFilter) {
                     "Botas" -> "1"
                     "Zapatillas" -> "2"
@@ -83,11 +92,11 @@ class ProductosActivity : ComponentActivity() {
                 // Filtrado reactivo en caliente de los 39 productos según la pestaña activa
                 val productosFiltrados = listaCompletaProductos.filter { it.id_categoria == idCategoriaFiltro }
 
-                Box(modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background)) {
-                    Scaffold(
+                Box(modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background)) { // Contenedor principal
+                    Scaffold( // Estructura básica con barra superior e inferior
                         containerColor = Color.Transparent,
                         topBar = {
-                            Column(modifier = Modifier.padding(top = 48.dp, bottom = 16.dp)) {
+                            Column(modifier = Modifier.padding(top = 48.dp, bottom = 16.dp)) { // Contenedor vertical
                                 Text(
                                     text = "Elegance",
                                     style = MaterialTheme.typography.displayMedium,
@@ -95,7 +104,7 @@ class ProductosActivity : ComponentActivity() {
                                     textAlign = TextAlign.Center
                                 )
                                 Spacer(modifier = Modifier.height(16.dp))
-                                FilterRow(selectedFilter) { selectedFilter = it }
+                                FilterRow(selectedFilter) { selectedFilter = it } // Fila de filtros
                             }
                         }
                     ) { innerPadding ->
@@ -109,25 +118,25 @@ class ProductosActivity : ComponentActivity() {
                             modifier = Modifier.padding(innerPadding)
                         ) { _ ->
                             if (cargando) {
-                                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) { // Contenedor centrado
+                                    Column(horizontalAlignment = Alignment.CenterHorizontally) { // Contenedor vertical
                                         CircularProgressIndicator(color = Color.Black)
                                         Spacer(modifier = Modifier.height(12.dp))
                                         Text(text = "Cargando catálogo...", color = Color.Gray, fontSize = 14.sp)
                                     }
                                 }
                             } else {
-                                // Cuadrícula de 2 columnas obligatoria según lineamientos visuales
-                                LazyVerticalGrid(
-                                    columns = GridCells.Fixed(2),
+                                // La organizamos en 2 columnas
+                                LazyVerticalGrid( // Lista en forma de cuadrícula
+                                    columns = GridCells.Fixed(2), // 2 columnas
                                     modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp),
                                     horizontalArrangement = Arrangement.spacedBy(16.dp),
                                     verticalArrangement = Arrangement.spacedBy(24.dp),
                                     contentPadding = PaddingValues(bottom = 120.dp)
                                 ) {
-// Dentro de la cuadrícula LazyVerticalGrid de ProductosActivity.kt
-                                    items(productosFiltrados) { producto ->
-                                        ProductCard(
+
+                                    items(productosFiltrados) { producto -> // Repetir por cada producto
+                                        ProductCard( // Tarjeta individual del producto
                                             producto = producto,
                                             isInitiallyFavorite = CartManager.isSelected(producto.nombre ?: ""),
                                             onFavoriteChanged = {
@@ -143,10 +152,10 @@ class ProductosActivity : ComponentActivity() {
                                                 putExtra("ID_CATEGORIA", producto.idCategoria ?: 1)
                                             }
                                             detailLauncher.launch(intent)
-                                        }
-                                    }
-                                }
-                            }
+                                        } // ProductCard
+                                    } // Items
+                                } // LazyVerticalGrid
+                            } // else
                         }
                     }
 
@@ -163,99 +172,5 @@ class ProductosActivity : ComponentActivity() {
                 }
             }
         }
-    }
-}
-
-@Composable
-fun FilterRow(selectedFilter: String, onFilterSelected: (String) -> Unit) {
-    val filters = listOf("Botas", "Zapatillas", "Tacos", "Sandalias")
-    LazyRow(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-        contentPadding = PaddingValues(horizontal = 16.dp)
-    ) {
-        items(filters) { filter ->
-            FilterChip(
-                selected = selectedFilter == filter,
-                onClick = { onFilterSelected(filter) },
-                label = { Text(filter) },
-                colors = FilterChipDefaults.filterChipColors(
-                    selectedContainerColor = Color.Black,
-                    selectedLabelColor = Color.White,
-                    containerColor = MaterialTheme.colorScheme.secondary,
-                    labelColor = Color.Black
-                ),
-                border = null,
-                shape = RoundedCornerShape(20.dp)
-            )
-        }
-    }
-}
-
-@Composable
-fun ProductCard(
-    producto: Producto,
-    isInitiallyFavorite: Boolean = false,
-    onFavoriteChanged: (Boolean) -> Unit = {},
-    onClick: () -> Unit
-) {
-    var isFavorite by remember(isInitiallyFavorite) { mutableStateOf(isInitiallyFavorite) }
-
-    Column(modifier = Modifier.fillMaxWidth().clickable { onClick() }) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .aspectRatio(0.85f)
-                .clip(RoundedCornerShape(24.dp))
-                .background(Color.White)
-        ) {
-            // Replicación de AsyncImage usando Coil para renderizar desde URL de AlwaysData
-            AsyncImage(
-                model = APIConfig.getImagenURL(producto.imagen ?: ""),
-                contentDescription = producto.nombre,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(6.dp)
-                    .clip(RoundedCornerShape(18.dp)),
-                contentScale = ContentScale.Crop
-            )
-
-            IconButton(
-                onClick = {
-                    isFavorite = !isFavorite
-                    onFavoriteChanged(isFavorite)
-                },
-                modifier = Modifier
-                    .align(Alignment.TopEnd)
-                    .padding(12.dp)
-                    .background(Color.White.copy(alpha = 0.5f), CircleShape)
-                    .size(30.dp)
-            ) {
-                Icon(
-                    imageVector = if (isFavorite) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
-                    contentDescription = "Favorito",
-                    tint = if (isFavorite) Color.Red else Color.Black,
-                    modifier = Modifier.size(18.dp)
-                )
-            }
-        }
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        Text(
-            text = producto.nombre ?: "",
-            style = MaterialTheme.typography.titleSmall,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(horizontal = 4.dp),
-            maxLines = 1
-        )
-
-        val precioDouble = producto.precioBase ?: 0.0
-        Text(
-            text = "S/ ${String.format("%.2f", precioDouble)}", // Formateo premium (S/ 0.00) solicitado por rúbrica
-            style = MaterialTheme.typography.bodySmall,
-            color = Color.Gray,
-            modifier = Modifier.padding(horizontal = 4.dp)
-        )
     }
 }

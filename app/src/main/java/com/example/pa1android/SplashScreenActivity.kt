@@ -89,7 +89,7 @@ fun SplashScreenContent(onTimeout: () -> Unit) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            // [OBJETO 1]: Icono Personalizado del Proyecto (La "E" elegante en negrita)
+            // Animación 1: Icono Personalizado del Proyecto (La "E" elegante en negrita)
             Box(
                 modifier = Modifier
                     .size(120.dp)
@@ -108,7 +108,7 @@ fun SplashScreenContent(onTimeout: () -> Unit) {
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // [OBJETO 2]: Subtítulo de branding con desvanecimiento asíncrono
+            // [Animación 2: Subtítulo de branding con desvanecimiento asíncrono
             Text(
                 text = "E L E G A N C E",
                 style = MaterialTheme.typography.headlineMedium,
@@ -119,7 +119,7 @@ fun SplashScreenContent(onTimeout: () -> Unit) {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // [OBJETO 3]: Línea de corte arquitectónico que se expande horizontalmente
+            // Animación 3]: Línea de corte arquitectónico que se expande horizontalmente
             Box(
                 modifier = Modifier
                     .fillMaxWidth(0.25f * widthAnim) // Crece dinámicamente según la animación

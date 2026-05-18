@@ -41,11 +41,11 @@ class MainActivity : ComponentActivity() {
                 ) {
                     MainWelcomePage() // Se despliega inmediatamente con su banner e información
 
-                    Box(modifier = Modifier.align(Alignment.BottomCenter)) {
+                    Box(modifier = Modifier.align(Alignment.BottomCenter)) { // Contenedor para la barra inferior
                         FloatingNavBar(currentScreen = "Home", onNavigate = { target ->
                             when (target) {
                                 "Productos" -> {
-                                    startActivity(Intent(this@MainActivity, ProductosActivity::class.java))
+                                    startActivity(Intent(this@MainActivity, CategoriasActivity::class.java))
                                     overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right) // Transición 2
                                 }
                                 "Compras" -> startActivity(Intent(this@MainActivity, ComprasActivity::class.java))
@@ -97,8 +97,8 @@ fun WelcomeAnimationScreen(onScreenClick: () -> Unit) {
 
 @Composable
 fun MainWelcomePage() {
-    val uriHandler = LocalUriHandler.current // Manejador para la apertura de enlaces externos (URLs)
-    Column(
+    val uriHandler = LocalUriHandler.current 
+    Column( // Contenedor para poner cosas una debajo de otra
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {

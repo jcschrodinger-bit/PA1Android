@@ -14,7 +14,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.HighlightOff
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -28,6 +27,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.pa1android.auth.TerminosActivity
+import com.example.pa1android.ui.components.CartItemRow
+import com.example.pa1android.ui.components.PaymentSummaryPanel
 import com.example.pa1android.ui.theme.PA1AndroidTheme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -63,12 +64,12 @@ fun CartScreen(onClose: () -> Unit) {
         )
     )
 
-    Box(
+    Box( // Contenedor para apilar cosas una encima de otra
         modifier = Modifier
             .fillMaxSize()
             .background(seaGradient)
     ) {
-        Column(
+        Column( // Contenedor vertical
             modifier = Modifier
                 .fillMaxSize()
                 .padding(horizontal = 24.dp)
@@ -77,7 +78,7 @@ fun CartScreen(onClose: () -> Unit) {
             // ENCABEZADO SUPERIOR
             // ==========================================
             Spacer(modifier = Modifier.height(48.dp))
-            Row(
+            Row( // Contenedor horizontal
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
@@ -115,7 +116,7 @@ fun CartScreen(onClose: () -> Unit) {
             // VALIDACIÓN DE ESTADO VACÍO (EmptyStateView Espejo)
             // ==========================================
             if (productosComprados.isEmpty()) {
-                Box(
+                Box( // Contenedor centrado para cuando el carrito está vacío
                     modifier = Modifier
                         .fillMaxWidth()
                         .weight(1f),
@@ -130,13 +131,13 @@ fun CartScreen(onClose: () -> Unit) {
                 }
             } else {
                 // Lista con scroll vertical (ScrollView / LazyColumn)
-                LazyColumn(
+                LazyColumn( // Lista desplazable de productos
                     verticalArrangement = Arrangement.spacedBy(16.dp),
                     modifier = Modifier
                         .fillMaxWidth()
                         .weight(1f)
                 ) {
-                    items(productosComprados) { producto ->
+                    items(productosComprados) { producto -> // Repetir para cada producto de la lista
                         CartItemRow(nombre = producto.first, precio = producto.second)
                     }
                 }
@@ -146,7 +147,7 @@ fun CartScreen(onClose: () -> Unit) {
         // ==========================================
         // PANEL INFERIOR (paymentSummaryPanel Espejo)
         // ==========================================
-        Column(
+        Column( // Contenedor vertical inferior
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .fillMaxWidth()
@@ -156,38 +157,12 @@ fun CartScreen(onClose: () -> Unit) {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             // Tarjeta del acumulado total
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(16.dp),
-                colors = CardDefaults.cardColors(containerColor = Color.White),
-                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
-            ) {
-                Row(
-                    modifier = Modifier
-                        .padding(20.dp)
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = "Suma Total",
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold,
-                        color = Color.Black
-                    )
-                    Text(
-                        text = "S/ $total.00",
-                        fontSize = 24.sp,
-                        fontWeight = FontWeight.ExtraBold,
-                        color = Color.Black
-                    )
-                }
-            }
+            PaymentSummaryPanel(total = total)
 
             Spacer(modifier = Modifier.height(20.dp))
 
             // Botón interactivo de Pago con indicador de carga
-            Button(
+            Button( // Botón para pagar
                 onClick = {
                     coroutineScope.launch {
                         procesandoPago = true // Activa el spin
@@ -212,7 +187,7 @@ fun CartScreen(onClose: () -> Unit) {
                 ),
                 shape = RoundedCornerShape(28.dp)
             ) {
-                Row(
+                Row( // Contenedor horizontal para el contenido del botón
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.Center
                 ) {
@@ -246,56 +221,6 @@ fun CartScreen(onClose: () -> Unit) {
             )
 
             Spacer(modifier = Modifier.height(16.dp))
-        }
-    }
-}
-
-@Composable
-fun CartItemRow(nombre: String, precio: Int) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(Color.White.copy(alpha = 0.05f), RoundedCornerShape(16.dp))
-            .padding(16.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Start
-    ) {
-        // Pequeño indicador circular de diseño premium
-        Box(
-            modifier = Modifier
-                .size(8.dp)
-                .background(Color.White.copy(alpha = 0.2f), CircleShape)
-        )
-
-        Spacer(modifier = Modifier.width(15.dp))
-
-        Column(modifier = Modifier.weight(1f)) {
-            Text(
-                text = nombre,
-                color = Color.White,
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Medium,
-                maxLines = 1
-            )
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(
-                text = "S/ $precio.00",
-                color = Color.Gray,
-                fontSize = 14.sp
-            )
-        }
-
-        // Botón interactivo para remover la pieza mediante un tap
-        IconButton(
-            onClick = { CartManager.toggleProduct(nombre, precio) },
-            modifier = Modifier.size(24.dp)
-        ) {
-            Icon(
-                imageVector = Icons.Default.HighlightOff,
-                contentDescription = "Eliminar",
-                tint = Color.White.copy(alpha = 0.3f),
-                modifier = Modifier.size(22.dp)
-            )
         }
     }
 }

@@ -20,12 +20,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun PrimaryButton(
+fun PrimaryButton( // Botón principal negro
     title: String,
     modifier: Modifier = Modifier,
     onClick: () -> Unit
 ) {
-    Button(
+    Button( // Botón para presionar
         onClick = onClick,
         modifier = modifier
             .fillMaxWidth()
@@ -43,14 +43,14 @@ fun PrimaryButton(
 }
 
 @Composable
-fun LoginButton(
+fun LoginButton( // Botón especial para iniciar sesión
     text: String,
     iconRes: Int? = null,
     imageVector: ImageVector? = null,
     containerColor: Color = Color.Black,
     onClick: () -> Unit
 ) {
-    Button(
+    Button( // Botón con icono y texto
         onClick = onClick,
         modifier = Modifier
             .fillMaxWidth()
@@ -58,7 +58,7 @@ fun LoginButton(
         shape = RoundedCornerShape(28.dp),
         colors = ButtonDefaults.buttonColors(containerColor = containerColor)
     ) {
-        Row(
+        Row( // Contenedor horizontal para icono y texto
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center,
             modifier = Modifier.fillMaxWidth()
@@ -91,18 +91,18 @@ fun LoginButton(
 }
 
 @Composable
-fun StatCard(
+fun StatCard( // Tarjeta para mostrar números o estadísticas
     title: String,
     value: String,
     modifier: Modifier = Modifier
 ) {
-    Card(
+    Card( // Tarjeta con sombra
         modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(28.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
-        Column(
+        Column( // Contenedor vertical para título y valor
             modifier = Modifier
                 .padding(24.dp)
                 .fillMaxWidth(),
@@ -125,13 +125,13 @@ fun StatCard(
 }
 
 @Composable
-fun SettingRow(
+fun SettingRow( // Fila interactiva para opciones o configuración
     icon: ImageVector,
     title: String,
     subtitle: String,
     onClick: () -> Unit = {}
 ) {
-    Row(
+    Row( // Fila horizontal
         modifier = Modifier
             .fillMaxWidth()
             .clickable { onClick() }
@@ -139,7 +139,7 @@ fun SettingRow(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        Box(
+        Box( // Pequeño contenedor para el icono
             modifier = Modifier
                 .size(40.dp)
                 .clip(CircleShape)
@@ -154,7 +154,7 @@ fun SettingRow(
             )
         }
 
-        Column(
+        Column( // Contenedor vertical para los textos
             modifier = Modifier.weight(1f),
             verticalArrangement = Arrangement.spacedBy(2.dp)
         ) {

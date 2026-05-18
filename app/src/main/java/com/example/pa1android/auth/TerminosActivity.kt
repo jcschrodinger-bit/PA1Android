@@ -63,11 +63,11 @@ fun TerminosScreen(onClose: () -> Unit) {
         }
     }
 
-    Scaffold(
+    Scaffold( // Estructura básica de la pantalla con barra superior
         modifier = Modifier.fillMaxSize(),
         containerColor = MaterialTheme.colorScheme.background, // LightGray #F2F2F2
         topBar = {
-            CenterAlignedTopAppBar(
+            CenterAlignedTopAppBar( // Barra superior centrada
                 title = {
                     Text(
                         text = datosTerminos?.titulo ?: "Políticas",
@@ -90,7 +90,7 @@ fun TerminosScreen(onClose: () -> Unit) {
             )
         }
     ) { innerPadding ->
-        Box(
+        Box( // Contenedor para centrar el contenido (carga o texto)
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding),
@@ -98,7 +98,7 @@ fun TerminosScreen(onClose: () -> Unit) {
         ) {
             if (cargandoTexto) {
                 // Ruedita de espera idéntica a tu ProgressView de iOS
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Column(horizontalAlignment = Alignment.CenterHorizontally) { // Contenedor vertical
                     CircularProgressIndicator(color = Color.Black)
                     Spacer(modifier = Modifier.height(12.dp))
                     Text(text = "Descargando políticas...", color = Color.Gray, fontSize = 14.sp)
@@ -112,7 +112,7 @@ fun TerminosScreen(onClose: () -> Unit) {
             } else {
                 datosTerminos?.let { terminos ->
                     // Contenedor con scroll vertical idéntico al ScrollView de iOS
-                    Column(
+                    Column( // Contenedor vertical con scroll para los textos
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(horizontal = 24.dp)
@@ -147,7 +147,7 @@ fun TerminosScreen(onClose: () -> Unit) {
 
 @Composable
 fun TerminosSeccion(titulo: String, texto: String) {
-    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) { // Contenedor vertical para cada sección
         Text(
             text = titulo,
             fontSize = 16.sp,
