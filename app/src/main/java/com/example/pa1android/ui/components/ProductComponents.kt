@@ -21,8 +21,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import com.example.pa1android.Network.APIConfig
-import com.example.pa1android.Producto
+import com.example.pa1android.data.network.APIConfig
+import com.example.pa1android.data.model.Producto
 
 @Composable
 fun FilterRow(selectedFilter: String, onFilterSelected: (String) -> Unit) {

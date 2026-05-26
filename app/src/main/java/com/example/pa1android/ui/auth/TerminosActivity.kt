@@ -1,4 +1,4 @@
-package com.example.pa1android.auth
+package com.example.pa1android.ui.auth
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -19,8 +19,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.pa1android.Terminos
-import com.example.pa1android.Network.RetrofitClient
+import com.example.pa1android.data.model.Terminos
+import com.example.pa1android.data.network.RetrofitClient
 import com.example.pa1android.ui.theme.PA1AndroidTheme
 import kotlinx.coroutines.launch
 
@@ -39,14 +39,12 @@ class TerminosActivity : ComponentActivity() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TerminosScreen(onClose: () -> Unit) {
-    // Estados de UI idénticos al @State de Xcode
     var datosTerminos by remember { mutableStateOf<Terminos?>(null) }
     var cargandoTexto by remember { mutableStateOf(true) }
     var errorConexion by remember { mutableStateOf(false) }
 
     val coroutineScope = rememberCoroutineScope()
 
-    // Carga asíncrona al aparecer la pantalla (Equivalente al .onAppear / Task de Swift)
     LaunchedEffect(Unit) {
         coroutineScope.launch {
             try {
@@ -65,7 +63,7 @@ fun TerminosScreen(onClose: () -> Unit) {
 
     Scaffold( // Estructura básica de la pantalla con barra superior
         modifier = Modifier.fillMaxSize(),
-        containerColor = MaterialTheme.colorScheme.background, // LightGray #F2F2F2
+        containerColor = MaterialTheme.colorScheme.background, 
         topBar = {
             CenterAlignedTopAppBar( // Barra superior centrada
                 title = {
@@ -97,7 +95,6 @@ fun TerminosScreen(onClose: () -> Unit) {
             contentAlignment = Alignment.Center
         ) {
             if (cargandoTexto) {
-                // Ruedita de espera idéntica a tu ProgressView de iOS
                 Column(horizontalAlignment = Alignment.CenterHorizontally) { // Contenedor vertical
                     CircularProgressIndicator(color = Color.Black)
                     Spacer(modifier = Modifier.height(12.dp))
@@ -111,7 +108,6 @@ fun TerminosScreen(onClose: () -> Unit) {
                 )
             } else {
                 datosTerminos?.let { terminos ->
-                    // Contenedor con scroll vertical idéntico al ScrollView de iOS
                     Column( // Contenedor vertical con scroll para los textos
                         modifier = Modifier
                             .fillMaxSize()
@@ -126,15 +122,12 @@ fun TerminosScreen(onClose: () -> Unit) {
                             color = Color.Gray
                         )
 
-                        // Bloque 1: Uso del servicio
                         TerminosSeccion(titulo = terminos.seccion1Titulo, texto = terminos.seccion1Texto)
                         HorizontalDivider(color = Color.LightGray.copy(alpha = 0.5f))
 
-                        // Bloque 2: Envíos y devoluciones
                         TerminosSeccion(titulo = terminos.seccion2Titulo, texto = terminos.seccion2Texto)
                         HorizontalDivider(color = Color.LightGray.copy(alpha = 0.5f))
 
-                        // Bloque 3: Propiedad Intelectual
                         TerminosSeccion(titulo = terminos.seccion3Titulo, texto = terminos.seccion3Texto)
 
                         Spacer(modifier = Modifier.height(32.dp))
@@ -152,7 +145,7 @@ fun TerminosSeccion(titulo: String, texto: String) {
             text = titulo,
             fontSize = 16.sp,
             fontWeight = FontWeight.Bold,
-            fontFamily = FontFamily.Serif, // <--- REQUERIMIENTO ESTRICTO RÚBRICA: Tipografía Serif
+            fontFamily = FontFamily.Serif, 
             color = Color.Black
         )
         Text(

@@ -1,4 +1,4 @@
-package com.example.pa1android
+package com.example.pa1android.ui.activities
 
 import android.content.Intent
 import android.os.Bundle
@@ -25,6 +25,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.pa1android.data.local.CartManager
 import com.example.pa1android.ui.components.PrimaryButton
 import com.example.pa1android.ui.theme.PA1AndroidTheme
 
@@ -35,17 +36,14 @@ class CheckoutSuccessActivity : ComponentActivity() {
         setContent {
             PA1AndroidTheme {
                 CheckoutSuccessScreen(onBackToStore = {
-                    // 1. Vaciamos el carrito de manera persistente local
                     CartManager.clearCart()
 
-                    // 2. Redirigimos a la MainActivity limpiando el historial para no volver a esta pantalla al dar atrás
                     val intent = Intent(this, MainActivity::class.java).apply {
                         flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
                     }
                     startActivity(intent)
                     finish()
 
-                    // Transición requerida por rúbrica
                     overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
                 })
             }
@@ -55,15 +53,13 @@ class CheckoutSuccessActivity : ComponentActivity() {
 
 @Composable
 fun CheckoutSuccessScreen(onBackToStore: () -> Unit) {
-    // Escala animada emulando el comportamiento .spring de tu Xcode
     val scaleAnim = remember { Animatable(0f) }
 
-    // Al aparecer en pantalla, se dispara la física de rebote de muelle (dampingFraction: 0.6)
     LaunchedEffect(Unit) {
         scaleAnim.animateTo(
             targetValue = 1f,
             animationSpec = spring(
-                dampingRatio = 0.6f, // Coeficiente de rebote idéntico a iOS
+                dampingRatio = 0.6f, 
                 stiffness = 400f
             )
         )
@@ -72,25 +68,24 @@ fun CheckoutSuccessScreen(onBackToStore: () -> Unit) {
     Column( // Contenedor vertical centrado
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background) // Fondo LightGray de la rúbrica
+            .background(MaterialTheme.colorScheme.background) 
             .padding(24.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
         Spacer(modifier = Modifier.weight(1f))
 
-        // Contenedor circular verde translúcido
         Box( // Círculo para el icono de éxito
             modifier = Modifier
                 .size(120.dp)
-                .scale(scaleAnim.value) // Inyección de la física de hardware
-                .background(Color(0xFFE8F5E9), CircleShape), // Green con opacidad del 10%
+                .scale(scaleAnim.value) 
+                .background(Color(0xFFE8F5E9), CircleShape), 
             contentAlignment = Alignment.Center
         ) {
             Icon(
                 imageVector = Icons.Default.CheckCircle,
                 contentDescription = "Éxito",
-                tint = Color(0xFF4CAF50), // Verde esmeralda de confirmación
+                tint = Color(0xFF4CAF50), 
                 modifier = Modifier.size(80.dp)
             )
         }
@@ -116,7 +111,6 @@ fun CheckoutSuccessScreen(onBackToStore: () -> Unit) {
 
         Spacer(modifier = Modifier.weight(1f))
 
-        // Reutilizamos nuestro componente refactorizado del Bloque Core
         PrimaryButton(title = "Volver a la Tienda") {
             onBackToStore()
         }

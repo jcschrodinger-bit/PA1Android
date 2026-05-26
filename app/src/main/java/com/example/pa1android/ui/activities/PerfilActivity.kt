@@ -1,4 +1,4 @@
-package com.example.pa1android
+package com.example.pa1android.ui.activities
 
 import android.content.Intent
 import android.os.Bundle
@@ -31,9 +31,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.pa1android.auth.TerminosActivity
+import com.example.pa1android.R
+import com.example.pa1android.data.local.CartManager
+import com.example.pa1android.ui.auth.TerminosActivity
 import com.example.pa1android.ui.components.*
 import com.example.pa1android.ui.theme.PA1AndroidTheme
+import java.util.Locale
 
 class PerfilActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,7 +47,7 @@ class PerfilActivity : ComponentActivity() {
                 PerfilScreen(onNavigate = { target ->
                     when (target) {
                         "Home" -> startActivity(Intent(this, MainActivity::class.java))
-                        "Productos" -> startActivity(Intent(this, ProductosActivity::class.java))
+                        "Productos" -> startActivity(Intent(this, CategoriasActivity::class.java))
                         "Compras" -> startActivity(Intent(this, ComprasActivity::class.java))
                         "Profile" -> {}
                     }
@@ -57,9 +60,7 @@ class PerfilActivity : ComponentActivity() {
 @Composable
 fun PerfilScreen(onNavigate: (String) -> Unit) {
     var isLoggedIn by remember { mutableStateOf(false) }
-    var startAnimation by remember { mutableStateOf(false) }
 
-    // Animación infinita para el logotipo de Elegance en el Login
     val infiniteTransition = rememberInfiniteTransition(label = "LoginAnim")
     val translateY by infiniteTransition.animateFloat(
         initialValue = -15f, targetValue = 15f,
@@ -76,21 +77,15 @@ fun PerfilScreen(onNavigate: (String) -> Unit) {
         ), label = ""
     )
 
-    LaunchedEffect(Unit) {
-        startAnimation = true
-    }
-
     Box( // Contenedor para apilar cosas una encima de otra
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
     ) {
-        // Transición animada asimétrica controlada por el estado de sesión (.transition en Swift)
         AnimatedContent( // Animación para cambiar de pantalla
             targetState = isLoggedIn,
             transitionSpec = {
                 if (targetState) {
-                    // Entrada lateral desde la derecha (Slide In / Fade In)
                     slideInHorizontally { width -> width } + fadeIn() togetherWith fadeOut()
                 } else {
                     fadeIn() togetherWith fadeOut()
@@ -99,9 +94,6 @@ fun PerfilScreen(onNavigate: (String) -> Unit) {
             label = "ProfileStateTransition"
         ) { loggedIn ->
             if (!loggedIn) {
-                // ==========================================
-                // INTERFAZ DE LOGIN (LoginView)
-                // ==========================================
                 Column( // Contenedor vertical
                     modifier = Modifier.fillMaxSize(),
                     horizontalAlignment = Alignment.CenterHorizontally
@@ -177,9 +169,6 @@ fun PerfilScreen(onNavigate: (String) -> Unit) {
                     Spacer(modifier = Modifier.height(120.dp))
                 }
             } else {
-                // ==========================================
-                // VISTA DE PERFIL REAL (perfilRealView)
-                // ==========================================
                 val nombresProductos = CartManager.getProductsList().map { it.first }
 
                 Column( // Contenedor vertical con scroll
@@ -187,18 +176,15 @@ fun PerfilScreen(onNavigate: (String) -> Unit) {
                         .fillMaxSize()
                         .verticalScroll(rememberScrollState())
                 ) {
-                    // Encabezado: Saludo y Foto Circular (.horizontal, 24)
                     ProfileHeader()
 
-                    // Bloque Estadístico (StatCard de compras y favoritos)
                     Row( // Contenedor horizontal
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 24.dp),
                         horizontalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
-                        // Formateo con dos dígitos (%02d) idéntico a iOS
-                        val totalCount = String.format("%02d", CartManager.getItemsCount())
+                        val totalCount = String.format(Locale.getDefault(), "%02d", CartManager.getItemsCount())
                         StatCard(
                             title = "Compras",
                             value = totalCount,
@@ -213,7 +199,6 @@ fun PerfilScreen(onNavigate: (String) -> Unit) {
 
                     Spacer(modifier = Modifier.height(25.dp))
 
-                    // Título de Sección: Mi Inventario
                     Text(
                         text = "Mi Inventario",
                         fontSize = 18.sp,
@@ -222,9 +207,7 @@ fun PerfilScreen(onNavigate: (String) -> Unit) {
                         modifier = Modifier.padding(start = 24.dp, end = 24.dp, bottom = 15.dp)
                     )
 
-                    // Control Adaptativo del Armario Vacío o Lleno
                     if (nombresProductos.isEmpty()) {
-                        // EmptyStateView Espejo
                         Column( // Contenedor vertical centrado
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -241,9 +224,6 @@ fun PerfilScreen(onNavigate: (String) -> Unit) {
                             )
                         }
                     } else {
-                        // Cuadrícula de 2 columnas de Inventario (LazyVGrid Espejo)
-                        // Para usar una grilla dentro de un ScrollView vertical general sin romper los hilos,
-                        // calculamos su altura o usamos trozos de filas mapeadas.
                         val chunks = nombresProductos.chunked(2)
                         Column( // Contenedor vertical para las filas de productos
                             modifier = Modifier
@@ -256,7 +236,7 @@ fun PerfilScreen(onNavigate: (String) -> Unit) {
                                     modifier = Modifier.fillMaxWidth(),
                                     horizontalArrangement = Arrangement.spacedBy(16.dp)
                                 ) {
-                                    fila.forEach { nombre -> // Repetir por cada producto de la fila
+                                    fila.forEach { nombre -> // Repetir para cada producto de la fila
                                         InventoryCard(nombre = nombre, modifier = Modifier.weight(1f))
                                     }
                                     if (fila.size == 1) {
@@ -269,7 +249,6 @@ fun PerfilScreen(onNavigate: (String) -> Unit) {
 
                     Spacer(modifier = Modifier.height(25.dp))
 
-                    // Bloque Unificado de Configuraciones (Tarjeta encapsulada cornerRadius: 24)
                     Surface(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -291,14 +270,13 @@ fun PerfilScreen(onNavigate: (String) -> Unit) {
                             SettingRow(
                                 icon = Icons.Default.Place,
                                 title = "Dirección",
-                                subtitle = "Puente Piedra, Lima" // Tus datos de zona localizados
+                                subtitle = "Puente Piedra, Lima" 
                             )
                         }
                     }
 
                     Spacer(modifier = Modifier.height(32.dp))
 
-                    // Botón para Cerrar Sesión interactivo
                     Text(
                         text = "Cerrar Sesión",
                         fontSize = 14.sp,
@@ -316,7 +294,6 @@ fun PerfilScreen(onNavigate: (String) -> Unit) {
             }
         }
 
-        // Barra de navegación flotante global
         Box(modifier = Modifier.align(Alignment.BottomCenter)) {
             FloatingNavBar(currentScreen = "Profile", onNavigate = onNavigate)
         }

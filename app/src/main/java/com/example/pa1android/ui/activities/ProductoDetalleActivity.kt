@@ -1,6 +1,5 @@
-package com.example.pa1android
+package com.example.pa1android.ui.activities
 
-import android.app.Activity
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -23,13 +22,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import com.example.pa1android.data.local.CartManager
 import com.example.pa1android.ui.theme.PA1AndroidTheme
 
-// Estructura espejo para resolver la lógica especial de Sandalias (id_categoria == 4)
 data class EleganceColorResult(val nombre: String, val color: Color)
 
 fun obtenerColorSandalia(nombreProducto: String): EleganceColorResult {
@@ -52,7 +50,6 @@ class ProductoDetalleActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        // Parámetros de producción enviados desde el catálogo
         val nombre = intent.getStringExtra("NOMBRE") ?: "Producto"
         val precio = intent.getIntExtra("PRECIO", 0)
         val imagenUrl = intent.getStringExtra("IMAGEN_URL") ?: ""
@@ -63,7 +60,7 @@ class ProductoDetalleActivity : ComponentActivity() {
             PA1AndroidTheme {
                 Scaffold( // Estructura básica de la pantalla
                     modifier = Modifier.fillMaxSize(),
-                    containerColor = MaterialTheme.colorScheme.background // Fondo LightGray de la rúbrica
+                    containerColor = MaterialTheme.colorScheme.background 
                 ) { innerPadding ->
                     ProductoDetalleScreen(
                         nombre = nombre,
@@ -74,11 +71,11 @@ class ProductoDetalleActivity : ComponentActivity() {
                         onClose = { finish() },
                         modifier = Modifier.padding(innerPadding)
                     )
-                } // Scaffold
-            } // PA1AndroidTheme
-        } // setContent
-    } //onCreate
-} // ComponentActivity
+                }
+            }
+        }
+    }
+}
 
 @Composable
 fun ProductoDetalleScreen(
@@ -90,14 +87,12 @@ fun ProductoDetalleScreen(
     onClose: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    // Estados internos reactivos idénticos a las variables
     var tallaSeleccionada by remember { mutableStateOf("38") }
     var colorSeleccionado by remember { mutableStateOf("Negro") }
 
     val isInCart = CartManager.isSelected(nombre)
     val datosColorSandalia = remember(nombre) { obtenerColorSandalia(nombre) }
 
-    // Sincroniza el color seleccionado por defecto en el arranque si es sandalia
     LaunchedEffect(idCategoria) {
         if (idCategoria == 4) {
             colorSeleccionado = datosColorSandalia.nombre
@@ -109,8 +104,6 @@ fun ProductoDetalleScreen(
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
     ) {
-
-        // Botón para el cierre
         Row( // Contenedor horizontal para la X
             modifier = Modifier
                 .fillMaxWidth()
@@ -130,7 +123,7 @@ fun ProductoDetalleScreen(
                 )
             }
         }
-        // Imagen del producto
+
         Box( // Contenedor para la imagen
             modifier = Modifier
                 .fillMaxWidth()
@@ -150,7 +143,6 @@ fun ProductoDetalleScreen(
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        // Nombre y precio formateado
         Row( // Contenedor horizontal para nombre y precio
             modifier = Modifier
                 .fillMaxWidth()
@@ -170,18 +162,17 @@ fun ProductoDetalleScreen(
                 fontSize = 22.sp,
                 fontWeight = FontWeight.SemiBold,
                 color = MaterialTheme.colorScheme.secondary,
-                textAlign = TextAlign.End
+                textAlign = androidx.compose.ui.text.style.TextAlign.End
             )
         }
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // Descripción de los calzados
         Text(
             text = descripcion,
             fontSize = 16.sp,
             color = Color.Gray,
-            textAlign = TextAlign.Justify,
+            textAlign = androidx.compose.ui.text.style.TextAlign.Justify,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 24.dp)
@@ -189,7 +180,6 @@ fun ProductoDetalleScreen(
 
         Spacer(modifier = Modifier.height(32.dp))
 
-        // Selección de la talla
         Text(
             text = "Selecciona tu Talla",
             fontSize = 18.sp,
@@ -199,7 +189,6 @@ fun ProductoDetalleScreen(
 
         Spacer(modifier = Modifier.height(15.dp))
 
-        // Carrusel horizontal de tallas
         Row( // Contenedor horizontal para las tallas
             modifier = Modifier
                 .fillMaxWidth()
@@ -230,7 +219,6 @@ fun ProductoDetalleScreen(
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        // Seleccionar el color
         Text(
             text = "Color",
             fontSize = 18.sp,
@@ -242,8 +230,6 @@ fun ProductoDetalleScreen(
 
         Box(modifier = Modifier.padding(horizontal = 24.dp)) { // Contenedor para el área de colores
             if (idCategoria == 4) {
-
-                // Modo para las sandalias
                 Row( // Contenedor horizontal para sandalias
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(12.dp)
@@ -263,7 +249,6 @@ fun ProductoDetalleScreen(
                     )
                 }
             } else {
-                // MODO CLÁSICO: Selectores interactivos circulares con aro de contorno
                 Row(horizontalArrangement = Arrangement.spacedBy(15.dp)) { // Contenedor horizontal para colores clásicos
                     val coloresClasicos = listOf(
                         "Negro" to Color.Black,
@@ -291,12 +276,10 @@ fun ProductoDetalleScreen(
 
         Spacer(modifier = Modifier.height(40.dp))
 
-        // Botón interactivo para compras y eliminar
         Button( // Botón para comprar o quitar
             onClick = {
-                // Agrega o remueve el producto usando lógica persistente de llaves compuestas
                 CartManager.toggleProduct(nombre, precio)
-                onClose() // Regresa al catálogo de forma fluida
+                onClose() 
             },
             modifier = Modifier
                 .fillMaxWidth()

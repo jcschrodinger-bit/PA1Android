@@ -29,11 +29,11 @@ import androidx.compose.ui.unit.sp
 fun FloatingNavBar(currentScreen: String, onNavigate: (String) -> Unit = {}) {
     Surface(
         modifier = Modifier
-            .padding(bottom = 32.dp, start = 20.dp, end = 20.dp) // Alineado con tus paddings de iOS
+            .padding(bottom = 32.dp, start = 20.dp, end = 20.dp) 
             .fillMaxWidth()
             .height(70.dp),
-        shape = RoundedCornerShape(35.dp), // Forma de cápsula/píldora idéntica
-        color = Color.White.copy(alpha = 0.85f), // Replicación del efecto vidrio/ultraThinMaterial
+        shape = RoundedCornerShape(35.dp), 
+        color = Color.White.copy(alpha = 0.85f), 
         shadowElevation = 12.dp
     ) {
         Row(
@@ -41,7 +41,6 @@ fun FloatingNavBar(currentScreen: String, onNavigate: (String) -> Unit = {}) {
             horizontalArrangement = Arrangement.SpaceEvenly,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Botón Inicio
             NavBarItem(
                 label = "Inicio",
                 activeIcon = Icons.Filled.Home,
@@ -50,7 +49,6 @@ fun FloatingNavBar(currentScreen: String, onNavigate: (String) -> Unit = {}) {
                 onClick = { onNavigate("Home") }
             )
 
-            // Botón Productos
             NavBarItem(
                 label = "Productos",
                 activeIcon = Icons.Filled.ShoppingBag,
@@ -59,7 +57,6 @@ fun FloatingNavBar(currentScreen: String, onNavigate: (String) -> Unit = {}) {
                 onClick = { onNavigate("Productos") }
             )
 
-            // Botón Compras
             NavBarItem(
                 label = "Compras",
                 activeIcon = Icons.Filled.ShoppingCart,
@@ -68,7 +65,6 @@ fun FloatingNavBar(currentScreen: String, onNavigate: (String) -> Unit = {}) {
                 onClick = { onNavigate("Compras") }
             )
 
-            // Botón Perfil
             NavBarItem(
                 label = "Perfil",
                 activeIcon = Icons.Filled.Person,
@@ -92,13 +88,12 @@ fun RowScope.NavBarItem(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
         modifier = Modifier
-            .weight(1f) // Equivale al .frame(maxWidth: .infinity) de tu SwiftUI
+            .weight(1f) 
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
-                indication = null // Elimina el destello gris por defecto de Android para mantener el look premium
+                indication = null 
             ) { onClick() }
     ) {
-        // Lógica espejo de icono relleno (.fill) basado en la selección
         Icon(
             imageVector = if (isSelected) activeIcon else inactiveIcon,
             contentDescription = label,
@@ -113,7 +108,7 @@ fun RowScope.NavBarItem(
             fontSize = 10.sp,
             fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
             color = if (isSelected) Color.Black else Color.Gray,
-            maxLines = 1, // .lineLimit(1) de tu SwiftUI
+            maxLines = 1, 
             overflow = TextOverflow.Ellipsis
         )
     }

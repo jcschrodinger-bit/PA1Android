@@ -14,7 +14,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.pa1android.CartManager
+import com.example.pa1android.data.local.CartManager
 
 @Composable
 fun CartItemRow(nombre: String, precio: Int) {
@@ -26,7 +26,6 @@ fun CartItemRow(nombre: String, precio: Int) {
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Start
     ) {
-        // Pequeño indicador circular de diseño premium
         Box( // Círculo decorativo
             modifier = Modifier
                 .size(8.dp)
@@ -51,7 +50,6 @@ fun CartItemRow(nombre: String, precio: Int) {
             )
         }
 
-        // Botón interactivo para remover la pieza mediante un tap
         IconButton(
             onClick = { CartManager.toggleProduct(nombre, precio) },
             modifier = Modifier.size(24.dp)

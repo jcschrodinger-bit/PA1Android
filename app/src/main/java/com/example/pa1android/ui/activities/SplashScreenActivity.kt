@@ -1,4 +1,4 @@
-package com.example.pa1android
+package com.example.pa1android.ui.activities
 
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -33,12 +33,9 @@ class SplashScreenActivity : ComponentActivity() {
         setContent {
             PA1AndroidTheme {
                 SplashScreenContent(onTimeout = {
-                    // Viaja a la MainActivity con la transición fluida requerida
                     val intent = Intent(this@SplashScreenActivity, MainActivity::class.java)
                     startActivity(intent)
-                    finish() // Destruye el Splash para que no se pueda regresar con el botón atrás
-
-                    // Requerimiento 2.1.4: Transición animada fluida entre Activities (Fade In / Fade Out)
+                    finish() 
                     overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
                 })
             }
@@ -48,48 +45,42 @@ class SplashScreenActivity : ComponentActivity() {
 
 @Composable
 fun SplashScreenContent(onTimeout: () -> Unit) {
-    // Estado inicial falso para disparar las animaciones al entrar a la pantalla
     var startAnimation by remember { mutableStateOf(false) }
 
-    // OBJETO ANIMADO 1: Escala/Zoom del Ícono del proyecto (La "E")
     val scaleAnim by animateFloatAsState(
         targetValue = if (startAnimation) 1f else 0.3f,
         animationSpec = tween(durationMillis = 1500, easing = FastOutSlowInEasing),
         label = "ScaleE"
     )
 
-    // OBJETO ANIMADO 2: Desvanecimiento / Opacidad (Alpha) del Eslogan Premium
     val alphaAnim by animateFloatAsState(
         targetValue = if (startAnimation) 1f else 0f,
         animationSpec = tween(durationMillis = 1800, easing = LinearOutSlowInEasing),
         label = "AlphaText"
     )
 
-    // OBJETO ANIMADO 3: Expansión de Ancho Horizontal de la línea de carga de Diseño
     val widthAnim by animateFloatAsState(
         targetValue = if (startAnimation) 1f else 0f,
         animationSpec = tween(durationMillis = 1200, easing = FastOutLinearInEasing),
         label = "WidthLine"
     )
 
-    // Lanzador del ciclo de vida (Temporizador automatizado de 3 segundos)
     LaunchedEffect(key1 = true) {
-        startAnimation = true // Dispara los 3 objetos visuales al mismo tiempo
-        delay(3000)           // Duración exacta antes del salto de pantalla
+        startAnimation = true 
+        delay(3000)           
         onTimeout()
     }
 
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFF2F2F2)), // Fondo claro minimalista de la rúbrica
+            .background(Color(0xFFF2F2F2)), 
         contentAlignment = Alignment.Center
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            // Animación 1: Icono Personalizado del Proyecto (La "E" elegante en negrita)
             Box(
                 modifier = Modifier
                     .size(120.dp)
@@ -108,7 +99,6 @@ fun SplashScreenContent(onTimeout: () -> Unit) {
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // [Animación 2: Subtítulo de branding con desvanecimiento asíncrono
             Text(
                 text = "E L E G A N C E",
                 style = MaterialTheme.typography.headlineMedium,
@@ -119,10 +109,9 @@ fun SplashScreenContent(onTimeout: () -> Unit) {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Animación 3]: Línea de corte arquitectónico que se expande horizontalmente
             Box(
                 modifier = Modifier
-                    .fillMaxWidth(0.25f * widthAnim) // Crece dinámicamente según la animación
+                    .fillMaxWidth(0.25f * widthAnim) 
                     .height(2.dp)
                     .background(Color(0xFF333333))
             )

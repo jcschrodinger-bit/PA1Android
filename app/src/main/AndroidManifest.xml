@@ -2,7 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- REQUERIMIENTO: Permiso explícito para conectar con AlwaysData -->
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -15,30 +14,24 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.PA1Android">
 
-        <!-- NUEVA: La SplashScreenActivity ahora es la puerta de entrada oficial -->
         <activity
-            android:name=".SplashScreenActivity"
+            android:name=".ui.activities.SplashScreenActivity"
             android:exported="true"
-            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"> <!-- Forzar pantalla completa elegante -->
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <activity android:name=".CategoriasActivity" android:exported="false" />
-
-        <!-- MainActivity pasa a ser una actividad interna (Cambiamos exported a false y quitamos el intent-filter) -->
-        <activity
-            android:name=".MainActivity"
-            android:exported="false" />
-
-        <activity android:name=".ProductosActivity" android:exported="false" />
-        <activity android:name=".auth.TerminosActivity" android:exported="false" />
-        <activity android:name=".ComprasActivity" android:exported="false" />
-        <activity android:name=".ProductoDetalleActivity" android:exported="false" />
-        <activity android:name=".PerfilActivity" android:exported="false" />
-        <activity android:name=".CheckoutSuccessActivity" android:exported="false" />
+        <activity android:name=".ui.activities.MainActivity" android:exported="false" />
+        <activity android:name=".ui.activities.CategoriasActivity" android:exported="false" />
+        <activity android:name=".ui.productos.ProductosActivity" android:exported="false" />
+        <activity android:name=".ui.auth.TerminosActivity" android:exported="false" />
+        <activity android:name=".ui.activities.ComprasActivity" android:exported="false" />
+        <activity android:name=".ui.activities.ProductoDetalleActivity" android:exported="false" />
+        <activity android:name=".ui.activities.PerfilActivity" android:exported="false" />
+        <activity android:name=".ui.activities.CheckoutSuccessActivity" android:exported="false" />
 
     </application>
 

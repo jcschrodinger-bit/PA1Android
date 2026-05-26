@@ -1,17 +1,18 @@
-package com.example.pa1android.Network
+package com.example.pa1android.data.network
 
-import com.example.pa1android.Producto
-import com.example.pa1android.Terminos
+import com.example.pa1android.data.model.Producto
+import com.example.pa1android.data.model.Terminos
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
+import retrofit2.http.Query
 
 interface AlwaysDataApiService {
     @GET(APIConfig.TERMINOS_ENDPOINT)
     suspend fun obtenerTerminos(): Terminos
 
     @GET(APIConfig.PRODUCTOS_ENDPOINT)
-    suspend fun obtenerProductos(): List<Producto>
+    suspend fun obtenerProductos(@Query("id_categoria") idCategoria: String): List<Producto>
 }
 
 object RetrofitClient {

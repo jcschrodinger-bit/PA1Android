@@ -1,4 +1,4 @@
-package com.example.pa1android.Network
+package com.example.pa1android.data.network
 
 object APIConfig {
     // URL principal del AlwaysData

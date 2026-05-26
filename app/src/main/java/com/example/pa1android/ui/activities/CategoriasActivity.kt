@@ -1,4 +1,4 @@
-package com.example.pa1android
+package com.example.pa1android.ui.activities
 
 import android.content.Intent
 import android.os.Bundle
@@ -16,7 +16,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -24,10 +23,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.pa1android.R
 import com.example.pa1android.ui.components.FloatingNavBar
 import com.example.pa1android.ui.theme.PA1AndroidTheme
+import com.example.pa1android.ui.productos.ProductosActivity
 
-// Modelo simple para las categorías
 data class CategoriaElegance(
     val id: String,
     val nombre: String,
@@ -45,10 +45,10 @@ class CategoriasActivity : ComponentActivity() {
                         .fillMaxSize()
                         .background(MaterialTheme.colorScheme.background)
                 ) {
-                    CategoriasScreen(onCategoryClick = { id ->
-                        // Navegación Maestro-Detalle: enviamos el ID a la pantalla de productos
+                    CategoriasScreen(onCategoryClick = { categoria ->
                         val intent = Intent(this@CategoriasActivity, ProductosActivity::class.java).apply {
-                            putExtra("ID_CATEGORIA", id)
+                            putExtra("ID_CATEGORIA", categoria.id)
+                            putExtra("NOMBRE_CATEGORIA", categoria.nombre)
                         }
                         startActivity(intent)
                     })
@@ -69,7 +69,7 @@ class CategoriasActivity : ComponentActivity() {
 }
 
 @Composable
-fun CategoriasScreen(onCategoryClick: (String) -> Unit) {
+fun CategoriasScreen(onCategoryClick: (CategoriaElegance) -> Unit) {
     val categorias = listOf(
         CategoriaElegance("1", "Botas", R.drawable.img_zapato),
         CategoriaElegance("2", "Zapatillas", R.drawable.img_portada),
@@ -102,7 +102,7 @@ fun CategoriasScreen(onCategoryClick: (String) -> Unit) {
             contentPadding = PaddingValues(bottom = 120.dp)
         ) {
             items(categorias) { categoria -> // Repetir para cada categoría
-                CategoryCard(categoria) { onCategoryClick(categoria.id) }
+                CategoryCard(categoria) { onCategoryClick(categoria) }
             }
         }
     }
@@ -126,7 +126,6 @@ fun CategoryCard(categoria: CategoriaElegance, onClick: () -> Unit) {
                 contentScale = ContentScale.Crop
             )
             
-            // Capa oscura para que el texto se lea bien
             Box(
                 modifier = Modifier
                     .fillMaxSize()
