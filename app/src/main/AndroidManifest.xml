@@ -15,7 +15,7 @@
         android:theme="@style/Theme.PA1Android">
 
         <activity
-            android:name=".ui.activities.SplashScreenActivity"
+            android:name=".SplashScreenActivity"
             android:exported="true"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
             <intent-filter>
@@ -24,14 +24,15 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".ui.activities.MainActivity" android:exported="false" />
-        <activity android:name=".ui.activities.CategoriasActivity" android:exported="false" />
-        <activity android:name=".ui.productos.ProductosActivity" android:exported="false" />
-        <activity android:name=".ui.auth.TerminosActivity" android:exported="false" />
-        <activity android:name=".ui.activities.ComprasActivity" android:exported="false" />
-        <activity android:name=".ui.activities.ProductoDetalleActivity" android:exported="false" />
-        <activity android:name=".ui.activities.PerfilActivity" android:exported="false" />
-        <activity android:name=".ui.activities.CheckoutSuccessActivity" android:exported="false" />
+        <activity android:name=".MainActivity" android:exported="false" />
+        <activity android:name=".TerminosActivity" android:exported="false" />
+        <activity android:name=".CheckoutSuccessActivity" android:exported="false" />
+
+        <activity android:name=".pages.tienda.TiendaActivity" android:exported="false" />
+        <activity android:name=".pages.productos.ProductosActivity" android:exported="false" />
+        <activity android:name=".pages.compras.ComprasActivity" android:exported="false" />
+        <activity android:name=".pages.Perfil.PerfilActivity" android:exported="false" />
+        <activity android:name=".pages.productodetalle.ProductoDetalleActivity" android:exported="false" />
 
     </application>
 
