@@ -5,9 +5,6 @@ import com.example.pa1android.utils.PRODUCTOS_ENDPOINT
 import retrofit2.http.GET
 import retrofit2.http.Query
 
-/**
- * Interfaz de red idéntica a ProyectoThor.
- */
 interface ProductosService {
     @GET(PRODUCTOS_ENDPOINT) // Usando la constante estilo Thor
     suspend fun getProductos(
