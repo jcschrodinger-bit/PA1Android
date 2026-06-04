@@ -3,7 +3,7 @@ package com.example.pa1android.utils
 /**
  * URLs y constantes del proyecto, idénticas a ProyectoThor.
  */
-const val API_URL = "https://jcmesia.alwaysdata.net/"
+const val API_URL = "http://jcmesia.alwaysdata.net/"
 const val TERMINOS_ENDPOINT = "terminos.php"
 const val PRODUCTOS_ENDPOINT = "productos.php"
 const val IMAGENES_BASE_URL = "${API_URL}imagenes/"

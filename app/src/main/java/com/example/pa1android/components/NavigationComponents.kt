@@ -1,10 +1,13 @@
 package com.example.pa1android.components
 
+import androidx.activity.ComponentActivity
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.ShoppingBag
@@ -20,10 +23,39 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.pa1android.ui.theme.ui.theme.dimens
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun MyTopAppBar(titulo: String) {
+    val context = LocalContext.current
+    val colorPrimario = Color.Black // Usando el color primario de PA1Android
+    TopAppBar(
+        title = { Text(titulo) },
+        navigationIcon = {
+            Surface(
+                onClick = { (context as? ComponentActivity)?.finish() },
+                shape = CircleShape,
+                color = colorPrimario.copy(0.1f),
+                modifier = Modifier.padding(start = MaterialTheme.dimens.small)
+            ) {
+                Box(Modifier.size(40.dp), contentAlignment = Alignment.Center) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = "Regresar",
+                        tint = colorPrimario
+                    )
+                }
+            }
+        },
+        colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent)
+    )
+}
 
 @Composable
 fun FloatingNavBar(currentScreen: String, onNavigate: (String) -> Unit = {}) {

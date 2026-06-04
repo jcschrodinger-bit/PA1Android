@@ -24,21 +24,27 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.lifecycleScope
 import com.example.pa1android.MainActivity
 import com.example.pa1android.R
 import com.example.pa1android.TerminosActivity
 import com.example.pa1android.components.*
 import com.example.pa1android.data.local.CartManager
+import com.example.pa1android.data.local.UserStore
 import com.example.pa1android.pages.compras.ComprasActivity
 import com.example.pa1android.pages.tienda.TiendaActivity
 import com.example.pa1android.ui.theme.ui.theme.PA1AndroidTheme
+import com.example.pa1android.utils.clienteActivo
+import com.example.pa1android.models.Cliente
+import com.example.pa1android.utils.clienteActivo
+import com.google.gson.Gson
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import java.util.Locale
 
 class PerfilActivity : ComponentActivity() {
@@ -54,6 +60,15 @@ class PerfilActivity : ComponentActivity() {
                         "Compras" -> startActivity(Intent(this, ComprasActivity::class.java))
                         "Profile" -> {}
                     }
+                }, onLogout = {
+                    lifecycleScope.launch {
+                        val userStore = UserStore(this@PerfilActivity)
+                        userStore.guardarDatosUsuario("") // Borramos sesión en DataStore
+                        clienteActivo = null // Limpiamos variable global
+                        val intent = Intent(this@PerfilActivity, MainActivity::class.java)
+                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                        startActivity(intent)
+                    }
                 })
             }
         }
@@ -61,8 +76,8 @@ class PerfilActivity : ComponentActivity() {
 }
 
 @Composable
-fun PerfilScreen(onNavigate: (String) -> Unit) {
-    var isLoggedIn by remember { mutableStateOf(false) }
+fun PerfilScreen(onNavigate: (String) -> Unit, onLogout: () -> Unit) {
+    var mostrarDialogoCerrarSesion by remember { mutableStateOf(false) }
 
     val infiniteTransition = rememberInfiniteTransition(label = "LoginAnim")
     val translateY by infiniteTransition.animateFloat(
@@ -80,13 +95,13 @@ fun PerfilScreen(onNavigate: (String) -> Unit) {
         ), label = ""
     )
 
-    Box( // Contenedor para apilar cosas una encima de otra
+    Box(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
     ) {
-        AnimatedContent( // Animación para cambiar de pantalla
-            targetState = isLoggedIn,
+        AnimatedContent(
+            targetState = clienteActivo != null,
             transitionSpec = {
                 if (targetState) {
                     slideInHorizontally { width -> width } + fadeIn() togetherWith fadeOut()
@@ -97,7 +112,7 @@ fun PerfilScreen(onNavigate: (String) -> Unit) {
             label = "ProfileStateTransition"
         ) { loggedIn ->
             if (!loggedIn) {
-                Column( // Contenedor vertical
+                Column(
                     modifier = Modifier.fillMaxSize(),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
@@ -114,7 +129,7 @@ fun PerfilScreen(onNavigate: (String) -> Unit) {
 
                     Spacer(modifier = Modifier.weight(0.6f))
 
-                    Surface( // Superficie para el fondo blanco
+                    Surface(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 24.dp),
@@ -122,29 +137,73 @@ fun PerfilScreen(onNavigate: (String) -> Unit) {
                         color = Color.White,
                         shadowElevation = 4.dp
                     ) {
-                        Column( // Contenedor vertical para los botones
+                        Column(
                             modifier = Modifier.padding(24.dp),
                             verticalArrangement = Arrangement.spacedBy(16.dp)
                         ) {
-                            LoginButton( // Botón para Apple
+                            LoginButton(
                                 text = "Continue with Apple",
                                 iconRes = R.drawable.apple_logo,
                                 containerColor = Color(0xFF2C2C2C),
-                                onClick = { isLoggedIn = true }
+                                onClick = { /* TODO: Apple Login */ }
                             )
-                            LoginButton( // Botón para Google
+                            LoginButton(
                                 text = "Continue with Google",
                                 iconRes = R.drawable.google_logo,
                                 containerColor = Color(0xFF2C2C2C),
-                                onClick = { isLoggedIn = true }
+                                onClick = { /* TODO: Google Login */ }
                             )
-                            LoginButton( // Botón para Email
+                            
+                            val localContext = LocalContext.current
+                            val scope = rememberCoroutineScope()
+                            LoginButton(
                                 text = "Continue with Email",
                                 imageVector = Icons.Default.Email,
                                 containerColor = Color(0xFF2C2C2C),
-                                onClick = { isLoggedIn = true }
+                                onClick = { 
+                                    scope.launch {
+                                        val userStore = UserStore(localContext)
+                                        val datosUsuario = userStore.leerDatosUsuario.first()
+                                        if (datosUsuario != null && datosUsuario.isNotEmpty()) {
+                                            try {
+                                                clienteActivo = Gson().fromJson(datosUsuario, Array<Cliente>::class.java).first()
+                                                val intent = Intent(localContext, PerfilActivity::class.java)
+                                                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                                                localContext.startActivity(intent)
+                                            } catch (e: Exception) {
+                                                val intent = Intent(localContext, com.example.pa1android.pages.Clientes.ClientesActivity::class.java)
+                                                localContext.startActivity(intent)
+                                            }
+                                        } else {
+                                            val intent = Intent(localContext, com.example.pa1android.pages.Clientes.ClientesActivity::class.java)
+                                            localContext.startActivity(intent)
+                                        }
+                                    }
+                                }
                             )
                         }
+                    }
+
+                    Spacer(modifier = Modifier.height(24.dp))
+
+                    val localContextForOficinas = LocalContext.current
+                    // Acceso a Oficinas para usuarios no logueados (para prueba rápida)
+                    Surface(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 24.dp),
+                        shape = RoundedCornerShape(24.dp),
+                        color = Color.White.copy(alpha = 0.9f),
+                        shadowElevation = 2.dp
+                    ) {
+                        SettingRow(
+                            icon = Icons.Default.Place,
+                            title = "Nuestras Oficinas",
+                            subtitle = "Ver sucursales sin iniciar sesión",
+                            onClick = {
+                                localContextForOficinas.startActivity(Intent(localContextForOficinas, com.example.pa1android.pages.oficinas.OficinasActivity::class.java))
+                            }
+                        )
                     }
 
                     Spacer(modifier = Modifier.height(24.dp))
@@ -174,14 +233,47 @@ fun PerfilScreen(onNavigate: (String) -> Unit) {
             } else {
                 val nombresProductos = CartManager.getProductsList().map { it.first }
 
-                Column( // Contenedor vertical con scroll
+                Column(
                     modifier = Modifier
                         .fillMaxSize()
                         .verticalScroll(rememberScrollState())
                 ) {
                     ProfileHeader()
 
-                    Row( // Contenedor horizontal
+                    // Información del Cliente (Nueva de ProyectoThor)
+                    Surface(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 24.dp),
+                        shape = RoundedCornerShape(24.dp),
+                        color = Color.White,
+                        shadowElevation = 2.dp
+                    ) {
+                        Column(modifier = Modifier.padding(20.dp)) {
+                            Text(
+                                text = clienteActivo?.nombres ?: "Usuario Sin Nombre",
+                                fontSize = 20.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = Color.Black
+                            )
+                            if (!clienteActivo?.empresa.isNullOrEmpty()) {
+                                Text(text = "Empresa: ${clienteActivo?.empresa}", fontSize = 14.sp, color = Color.Gray)
+                            }
+                            if (!clienteActivo?.cargo.isNullOrEmpty()) {
+                                Text(text = "Cargo: ${clienteActivo?.cargo}", fontSize = 14.sp, color = Color.Gray)
+                            }
+                            Row(modifier = Modifier.padding(top = 8.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                                Text(text = "${clienteActivo?.ciudad ?: ""}, ${clienteActivo?.pais ?: ""}", fontSize = 14.sp, color = Color.Gray)
+                            }
+                            if (!clienteActivo?.telefono.isNullOrEmpty()) {
+                                Text(text = "Tel: ${clienteActivo?.telefono}", fontSize = 14.sp, color = Color.Gray)
+                            }
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(20.dp))
+
+                    Row(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 24.dp),
@@ -211,7 +303,7 @@ fun PerfilScreen(onNavigate: (String) -> Unit) {
                     )
 
                     if (nombresProductos.isEmpty()) {
-                        Column( // Contenedor vertical centrado
+                        Column(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(vertical = 40.dp),
@@ -228,18 +320,18 @@ fun PerfilScreen(onNavigate: (String) -> Unit) {
                         }
                     } else {
                         val chunks = nombresProductos.chunked(2)
-                        Column( // Contenedor vertical para las filas de productos
+                        Column(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(horizontal = 24.dp),
                             verticalArrangement = Arrangement.spacedBy(16.dp)
                         ) {
-                            chunks.forEach { fila -> // Repetir por cada fila de dos productos
-                                Row( // Fila horizontal
+                            chunks.forEach { fila ->
+                                Row(
                                     modifier = Modifier.fillMaxWidth(),
                                     horizontalArrangement = Arrangement.spacedBy(16.dp)
                                 ) {
-                                    fila.forEach { nombre -> // Repetir para cada producto de la fila
+                                    fila.forEach { nombre ->
                                         InventoryCard(nombre = nombre, modifier = Modifier.weight(1f))
                                     }
                                     if (fila.size == 1) {
@@ -261,6 +353,7 @@ fun PerfilScreen(onNavigate: (String) -> Unit) {
                         shadowElevation = 2.dp
                     ) {
                         Column {
+                            val localContext = LocalContext.current
                             SettingRow(
                                 icon = Icons.Default.CreditCard,
                                 title = "Métodos de Pago",
@@ -273,7 +366,19 @@ fun PerfilScreen(onNavigate: (String) -> Unit) {
                             SettingRow(
                                 icon = Icons.Default.Place,
                                 title = "Dirección",
-                                subtitle = "Puente Piedra, Lima" 
+                                subtitle = "${clienteActivo?.ciudad ?: "Sin definir"}, ${clienteActivo?.pais ?: ""}" 
+                            )
+                            HorizontalDivider(
+                                modifier = Modifier.padding(horizontal = 20.dp),
+                                color = Color.LightGray.copy(alpha = 0.4f)
+                            )
+                            SettingRow(
+                                icon = Icons.Default.Place,
+                                title = "Nuestras Oficinas",
+                                subtitle = "Gestionar sucursales de la tienda",
+                                onClick = {
+                                    localContext.startActivity(Intent(localContext, com.example.pa1android.pages.oficinas.OficinasActivity::class.java))
+                                }
                             )
                         }
                     }
@@ -288,13 +393,34 @@ fun PerfilScreen(onNavigate: (String) -> Unit) {
                         textAlign = TextAlign.Center,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .clickable { isLoggedIn = false }
+                            .clickable { mostrarDialogoCerrarSesion = true }
                             .padding(vertical = 20.dp)
                     )
 
                     Spacer(modifier = Modifier.height(120.dp))
                 }
             }
+        }
+
+        if (mostrarDialogoCerrarSesion) {
+            AlertDialog(
+                onDismissRequest = { mostrarDialogoCerrarSesion = false },
+                title = { Text("Cerrar sesión") },
+                text = { Text("¿Estás seguro que desea cerrar sesión?") },
+                confirmButton = {
+                    TextButton(onClick = {
+                        mostrarDialogoCerrarSesion = false
+                        onLogout()
+                    }) {
+                        Text("Sí", color = Color.Red)
+                    }
+                },
+                dismissButton = {
+                    TextButton(onClick = { mostrarDialogoCerrarSesion = false }) {
+                        Text("No", color = Color.Black)
+                    }
+                }
+            )
         }
 
         Box(modifier = Modifier.align(Alignment.BottomCenter)) {

@@ -29,10 +29,33 @@ import com.example.pa1android.pages.compras.ComprasActivity
 import com.example.pa1android.pages.tienda.TiendaActivity
 import com.example.pa1android.ui.theme.ui.theme.PA1AndroidTheme
 
+import androidx.lifecycle.lifecycleScope
+import com.example.pa1android.data.local.UserStore
+import com.example.pa1android.models.Cliente
+import com.example.pa1android.utils.clienteActivo
+import com.google.gson.Gson
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
+
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         CartManager.init(applicationContext) 
+        
+        // Lógica de Autologin de ProyectoThor
+        lifecycleScope.launch {
+            val userStore = UserStore(this@MainActivity)
+            val datosUsuario = userStore.leerDatosUsuario.first()
+            if (datosUsuario != null && datosUsuario.isNotEmpty()) {
+                try {
+                    clienteActivo = Gson().fromJson(datosUsuario, Array<Cliente>::class.java).first()
+                } catch (e: Exception) {
+                    // Si hay error en los datos guardados, limpiamos
+                    userStore.guardarDatosUsuario("")
+                }
+            }
+        }
+
         enableEdgeToEdge()
         setContent {
             PA1AndroidTheme {

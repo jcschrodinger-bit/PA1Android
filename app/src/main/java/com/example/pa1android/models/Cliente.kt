@@ -1,11 +1,11 @@
 package com.example.pa1android.models
 
-/**
- * Modelo de Cliente para manejar sesiones, idéntico a ProyectoThor.
- */
 data class Cliente(
     val idcliente: Int,
-    val nombre: String,
-    val usuario: String,
-    val token: String? = null
+    val nombres: String?,
+    val empresa: String?,
+    val cargo: String?,
+    val ciudad: String?,
+    val pais: String?,
+    val telefono: String?
 )

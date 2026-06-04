@@ -28,4 +28,8 @@
     <string name="contacto_direccion">Av. Principal 123, Lima</string>
     <string name="contacto_telefono">+51 987 654 321</string>
     <string name="contacto_email">ventas@zapateriaelegance.pe</string>
+
+    <string name="iniciar_sesion">Iniciar Sesión</string>
+    <string name="correo_telefono">Correo o Teléfono</string>
+    <string name="clave">Contraseña</string>
 </resources>
