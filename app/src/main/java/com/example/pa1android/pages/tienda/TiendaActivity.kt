@@ -80,42 +80,37 @@ fun TiendaScreenContent(
     onNavigate: (String) -> Unit
 ) {
     Box(modifier = Modifier.fillMaxSize()) {
-        Column(modifier = Modifier.fillMaxSize().padding(horizontal = 24.dp)) {
-            Spacer(modifier = Modifier.height(64.dp))
+        Column(modifier = Modifier.fillMaxSize()) {
+            com.example.pa1android.components.MyTopAppBar(titulo = "Categorías")
 
-            Text(
-                text = "Categorías",
-                style = MaterialTheme.typography.displayMedium,
-                modifier = Modifier.fillMaxWidth(),
-                textAlign = TextAlign.Center
-            )
+            Column(modifier = Modifier.padding(horizontal = 24.dp)) {
+                Text(
+                    text = "Explora nuestras colecciones exclusivas",
+                    color = Color.Gray,
+                    style = MaterialTheme.typography.titleMedium,
+                    modifier = Modifier.padding(top = 4.dp, bottom = 24.dp).fillMaxWidth(),
+                    textAlign = TextAlign.Center
+                )
 
-            Text(
-                text = "Explora nuestras colecciones exclusivas",
-                color = Color.Gray,
-                style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.padding(top = 4.dp, bottom = 24.dp).fillMaxWidth(),
-                textAlign = TextAlign.Center
-            )
-
-            when (val state = uiState) {
-                is TiendaUIState.Loading -> {
-                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                        CircularProgressIndicator(color = Color.Black)
+                when (val state = uiState) {
+                    is TiendaUIState.Loading -> {
+                        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                            CircularProgressIndicator(color = Color.Black)
+                        }
                     }
-                }
-                is TiendaUIState.Error -> {
-                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                        Text(text = state.message, color = Color.Red)
+                    is TiendaUIState.Error -> {
+                        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                            Text(text = state.message, color = Color.Red)
+                        }
                     }
-                }
-                is TiendaUIState.Success -> {
-                    LazyColumn(
-                        verticalArrangement = Arrangement.spacedBy(20.dp),
-                        contentPadding = PaddingValues(bottom = 120.dp)
-                    ) {
-                        items(state.Categorias) { categoria ->
-                            FilaTienda(categoria) { onCategoryClick(categoria) }
+                    is TiendaUIState.Success -> {
+                        LazyColumn(
+                            verticalArrangement = Arrangement.spacedBy(20.dp),
+                            contentPadding = PaddingValues(bottom = 120.dp)
+                        ) {
+                            items(state.Categorias) { categoria ->
+                                FilaTienda(categoria) { onCategoryClick(categoria) }
+                            }
                         }
                     }
                 }

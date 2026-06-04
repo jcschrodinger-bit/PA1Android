@@ -238,7 +238,7 @@ fun PerfilScreen(onNavigate: (String) -> Unit, onLogout: () -> Unit) {
                         .fillMaxSize()
                         .verticalScroll(rememberScrollState())
                 ) {
-                    ProfileHeader()
+                    com.example.pa1android.components.MyTopAppBar(titulo = "Mi Perfil")
 
                     // Información del Cliente (Nueva de ProyectoThor)
                     Surface(

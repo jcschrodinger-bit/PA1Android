@@ -86,14 +86,7 @@ fun ProductosScreenContent(
         Scaffold(
             containerColor = Color.Transparent,
             topBar = {
-                Column(modifier = Modifier.padding(top = 48.dp, bottom = 16.dp)) {
-                    Text(
-                        text = "Colección $nombreCategoria",
-                        style = MaterialTheme.typography.displayMedium,
-                        modifier = Modifier.fillMaxWidth(),
-                        textAlign = TextAlign.Center
-                    )
-                }
+                com.example.pa1android.components.MyTopAppBar(titulo = "Colección $nombreCategoria")
             }
         ) { innerPadding ->
             Column(modifier = Modifier.padding(innerPadding)) {

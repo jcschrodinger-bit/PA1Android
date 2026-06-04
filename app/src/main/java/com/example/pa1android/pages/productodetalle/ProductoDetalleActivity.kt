@@ -21,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -99,25 +100,7 @@ fun ProductoDetalleScreen(
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 24.dp, vertical = 16.dp),
-            horizontalArrangement = Arrangement.End
-        ) {
-            IconButton(
-                onClick = onClose,
-                modifier = Modifier
-                    .background(Color.Black.copy(alpha = 0.05f), CircleShape)
-                    .size(44.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Close,
-                    contentDescription = "Cerrar",
-                    tint = Color.Black
-                )
-            }
-        }
+        com.example.pa1android.components.MyTopAppBar(titulo = producto.nombre)
 
         Box(
             modifier = Modifier
@@ -132,7 +115,9 @@ fun ProductoDetalleScreen(
                 model = getImagenURL(producto.imagenchica),
                 contentDescription = producto.nombre,
                 modifier = Modifier.fillMaxSize(),
-                contentScale = ContentScale.Crop
+                contentScale = ContentScale.Crop,
+                error = painterResource(id = com.example.pa1android.R.drawable.img_zapato),
+                placeholder = painterResource(id = com.example.pa1android.R.drawable.img_zapato)
             )
         }
 

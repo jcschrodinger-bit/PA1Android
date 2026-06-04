@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -54,7 +55,9 @@ fun FilaProducto(
                 model = rutaImagen,
                 contentDescription = null,
                 modifier = Modifier.fillMaxSize().padding(6.dp).clip(RoundedCornerShape(18.dp)),
-                contentScale = ContentScale.Crop
+                contentScale = ContentScale.Crop,
+                error = painterResource(id = com.example.pa1android.R.drawable.img_zapato),
+                placeholder = painterResource(id = com.example.pa1android.R.drawable.img_zapato)
             )
 
             IconButton(
@@ -88,7 +91,7 @@ fun FilaProducto(
             overflow = TextOverflow.Ellipsis
         )
 
-        val precioFinal = if(itemProducto.preciorebajado > 0.0) itemProducto.preciorebajado else itemProducto.precio
+        val precioFinal = itemProducto.precio
 
         Row(
             modifier = Modifier.fillMaxWidth(),

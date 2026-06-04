@@ -141,21 +141,33 @@ class ClientesActivity : ComponentActivity() {
     }
 
     private fun evaluarResultado(resultado: String, viewModel: ClientesViewModel) {
-        when (resultado) {
+        val trimmedResultado = resultado.trim()
+        when (trimmedResultado) {
             "-1" -> Toast.makeText(this, "La cuenta no existe", Toast.LENGTH_SHORT).show()
             "-2" -> Toast.makeText(this, "La contraseña es incorrecta", Toast.LENGTH_SHORT).show()
             else -> {
+                if (trimmedResultado.isEmpty() || trimmedResultado.contains("Fatal error") || trimmedResultado.startsWith("<")) {
+                    android.util.Log.e("LOGIN_ERROR", "Error del servidor o respuesta inesperada: $resultado")
+                    Toast.makeText(this, "Error en el servidor", Toast.LENGTH_SHORT).show()
+                    return
+                }
                 try {
-                    clienteActivo = Gson().fromJson(resultado, Array<Cliente>::class.java).first()
-                    Toast.makeText(this, "Bienvenido", Toast.LENGTH_SHORT).show()
-                    startActivity(Intent(this, PerfilActivity::class.java))
-                    if(viewModel.estadoCheck) {
-                        lifecycleScope.launch {
-                            val userStore = UserStore(this@ClientesActivity)
-                            userStore.guardarDatosUsuario(resultado)
+                    val clientes = Gson().fromJson(trimmedResultado, Array<Cliente>::class.java)
+                    if (clientes != null && clientes.isNotEmpty()) {
+                        clienteActivo = clientes.first()
+                        Toast.makeText(this, "Bienvenido", Toast.LENGTH_SHORT).show()
+                        startActivity(Intent(this, PerfilActivity::class.java))
+                        if(viewModel.estadoCheck) {
+                            lifecycleScope.launch {
+                                val userStore = UserStore(this@ClientesActivity)
+                                userStore.guardarDatosUsuario(trimmedResultado)
+                            }
                         }
+                    } else {
+                        Toast.makeText(this, "No se encontraron datos de usuario", Toast.LENGTH_SHORT).show()
                     }
                 } catch (e: Exception) {
+                    android.util.Log.e("LOGIN_ERROR", "Error al parsear JSON: $resultado", e)
                     Toast.makeText(this, "Error en los datos", Toast.LENGTH_SHORT).show()
                 }
             }

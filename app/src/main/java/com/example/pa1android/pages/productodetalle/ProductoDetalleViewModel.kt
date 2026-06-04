@@ -16,19 +16,13 @@ class ProductoDetalleViewModel : ViewModel() {
         viewModelScope.launch {
             _uistate.value = ProductoDetalleUIState.Loading
             try {
-                // CORRECCIÓN DE LÓGICA: 
-                // Si el servidor devuelve una lista completa o no filtra bien por ID,
-                // buscamos el producto específico dentro de la respuesta para asegurar que no sea siempre el primero.
                 val respuesta = RetrofitClient.productosService.getProductoDetalle(idproducto)
                 
-                // Buscamos el producto que coincida con el ID solicitado
-                val productoEncontrado = respuesta.find { it.idproducto == idproducto }
+                // Buscamos el producto específico por su ID
+                val productoEncontrado = respuesta.find { it.idproducto == idproducto } ?: respuesta.firstOrNull()
                 
                 if (productoEncontrado != null) {
                     _uistate.value = ProductoDetalleUIState.Success(productoEncontrado)
-                } else if (respuesta.isNotEmpty()) {
-                    // Si no coincide exactamente pero hay datos, mostramos el primero por seguridad
-                    _uistate.value = ProductoDetalleUIState.Success(respuesta[0])
                 } else {
                     _uistate.value = ProductoDetalleUIState.Error("Producto no encontrado")
                 }

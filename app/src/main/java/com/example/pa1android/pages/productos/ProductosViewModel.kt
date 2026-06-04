@@ -19,9 +19,12 @@ class ProductosViewModel: ViewModel() {
         viewModelScope.launch {
             _uistate.value = ProductosUIState.Loading
             try{
-                // Llamada al servicio web filtrando por categoría
                 val respuesta = RetrofitClient.productosService.getProductos(idcategoria)
-                _uistate.value = ProductosUIState.Success(respuesta)
+                
+                // Filtramos por idcategoria (Int)
+                val productosFiltrados = respuesta.filter { it.idcategoria == idcategoria }
+                
+                _uistate.value = ProductosUIState.Success(productosFiltrados)
             } catch(e: Exception){
                 _uistate.value = ProductosUIState.Error("Error al cargar los datos: ${e.localizedMessage}")
             }

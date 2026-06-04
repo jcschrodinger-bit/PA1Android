@@ -13,6 +13,16 @@ const val IMAGENES_BASE_URL = "${API_URL}imagenes/"
  * y seguir el estilo de centralización de Thor.
  */
 fun getImagenURL(nombre: String?): String {
-    val nombreLimpio = nombre?.trim() ?: ""
-    return "$IMAGENES_BASE_URL$nombreLimpio.png"
+    if (nombre.isNullOrBlank()) return ""
+    val nombreLimpio = nombre.trim()
+    
+    // Si el servidor ya manda la URL completa, la usamos
+    if (nombreLimpio.startsWith("http")) return nombreLimpio
+    
+    // Si ya tiene extensión, no agregamos .png
+    return if (nombreLimpio.contains(".")) {
+        "$IMAGENES_BASE_URL$nombreLimpio"
+    } else {
+        "$IMAGENES_BASE_URL$nombreLimpio.png"
+    }
 }
