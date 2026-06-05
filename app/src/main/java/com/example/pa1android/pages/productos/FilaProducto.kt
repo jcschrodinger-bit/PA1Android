@@ -24,9 +24,6 @@ import com.example.pa1android.models.Producto
 import com.example.pa1android.utils.getImagenURL
 import java.util.Locale
 
-/**
- * Componente visual de producto siguiendo el patrón de FilaEmpleado en Thor.
- */
 @Composable
 fun FilaProducto(
     itemProducto: Producto,

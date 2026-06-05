@@ -7,9 +7,6 @@ import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
-/**
- * Clase de dimensiones siguiendo el patrón de ProyectoThor.
- */
 data class Dimens(
     val extraSmall: Dp = 4.dp,
     val small: Dp = 8.dp,
